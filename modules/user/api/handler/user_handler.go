@@ -21,7 +21,6 @@ func NewUserHandler(
 	requestValidator *validator.Validate,
 	createUserUseCase usecase.CreateUserUseCase,
 	loginUserUseCase usecase.LoginUserUseCase,
-
 ) UserHandler {
 	return &userHandler{
 		requestValidator:  requestValidator,

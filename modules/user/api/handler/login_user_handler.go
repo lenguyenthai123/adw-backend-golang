@@ -48,7 +48,6 @@ func (h *userHandler) HandleLoginUser(c *gin.Context) {
 					panic(res.ErrFieldValidationFailed(errors.New("invalid email")))
 				}
 			}
-
 			// If no field matched, return default error
 			panic(res.ErrFieldValidationFailed(err))
 		}

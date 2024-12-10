@@ -29,8 +29,7 @@ func NewUserHandler(db *database.Database, requestValidator *validator.Validate)
 
 	return userHandler.NewUserHandler(requestValidator,
 		usecase.NewCreateUserUseCase(hashAlgo, userRepoReader, userRepoWriter),
-		usecase.NewLoginUserUseCase(jwtToken, jwtConfig.AccessTokenExpiry,
-			jwtConfig.RefreshTokenExpiry, hashAlgo, userRepoReader))
+		usecase.NewLoginUserUseCase(jwtToken, jwtConfig.AccessTokenExpiry, jwtConfig.RefreshTokenExpiry, hashAlgo, userRepoReader))
 }
 
 func (r *RouteHandler) userRoute() route.GroupRoute {
