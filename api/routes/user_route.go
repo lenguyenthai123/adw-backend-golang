@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend-golang/api/middlewares"
 	"backend-golang/config"
 	"backend-golang/config/models"
 	userHandler "backend-golang/modules/user/api/handler"
@@ -45,6 +46,14 @@ func (r *RouteHandler) userRoute() route.GroupRoute {
 				Path:    "/login",
 				Method:  method.POST,
 				Handler: r.UserHandler.HandleLoginUser,
+			},
+			{
+				Path:    "/test",
+				Method:  method.GET,
+				Handler: r.UserHandler.HandleTest,
+				Middlewares: route.Middlewares(
+					middlewares.Authentication(),
+				),
 			},
 		},
 	}

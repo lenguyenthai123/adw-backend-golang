@@ -9,6 +9,7 @@ import (
 type UserHandler interface {
 	HandleCreateUser(c *gin.Context)
 	HandleLoginUser(c *gin.Context)
+	HandleTest(c *gin.Context)
 }
 
 type userHandler struct {
