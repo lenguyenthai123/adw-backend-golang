@@ -30,7 +30,6 @@ func Authentication() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-
 		// Token hợp lệ, tiếp tục request
 		c.Next()
 	}

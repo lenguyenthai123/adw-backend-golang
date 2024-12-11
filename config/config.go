@@ -1,11 +1,16 @@
 package config
 
 import (
+	"backend-golang/config/models"
 	"backend-golang/pkgs/log"
 	"backend-golang/utils"
+	"crypto/tls"
 	"fmt"
+	"github.com/MicahParks/keyfunc"
 	"github.com/joho/godotenv"
+	"net/http"
 	"os"
+	"time"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
@@ -83,4 +88,33 @@ func loadConfigFromFile(configPath string) (config interface{}, err error) {
 	}
 
 	return
+}
+
+var JWKS *keyfunc.JWKS
+
+func LoadJWKS() {
+	keycloakConfig := LoadConfig(&models.KeycloakConfig{}).(*models.KeycloakConfig)
+
+	// Tạo một HTTP client với cấu hình bypass kiểm tra chứng chỉ TLS
+	httpClient := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true, // Bypass kiểm tra chứng chỉ TLS
+			},
+		},
+	}
+
+	// Tải JWKS với HTTP client tùy chỉnh
+	var err error
+	JWKS, err = keyfunc.Get(keycloakConfig.JwksURL, keyfunc.Options{
+		Client:          httpClient, // Sử dụng HTTP client tùy chỉnh
+		RefreshInterval: time.Hour,  // Tự động refresh JWKS mỗi giờ
+		RefreshErrorHandler: func(err error) {
+			log.JsonLogger.Error(err.Error())
+		},
+		RefreshUnknownKID: true, // Tự động refresh nếu gặp KID không xác định
+	})
+	if err != nil {
+		log.JsonLogger.Error(err.Error())
+	}
 }

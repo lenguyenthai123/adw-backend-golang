@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend-golang/api"
+	"backend-golang/config"
 	"backend-golang/pkgs/transport/http/server"
 	"github.com/Nerzal/gocloak/v13"
 	"github.com/gin-gonic/gin"
@@ -122,30 +123,10 @@ func GetUserInfoHandler(c *gin.Context) {
 	})
 }
 
-var jwksURL = "http://localhost:8080/auth/realms/master/protocol/openid-connect/certs"
-
 func main() {
 
 	// Tải JWKS khi ứng dụng khởi chạy
-	//config.LoadJWKS(jwksURL)
-	//appConfig := config.LoadConfig(&models.AppConfig{}).(*models.AppConfig)
-
-	// Tạo router Gin
-	r := gin.Default()
-
-	// Route đăng ký
-	r.POST("/register", RegisterUserHandler)
-
-	// Route đăng nhập
-	r.POST("/login", LoginUserHandler)
-
-	// Route lấy thông tin người dùng
-	r.GET("/userinfo", GetUserInfoHandler)
-
-	// Khởi chạy server
-	//if err := r.Run(":8081"); err != nil {
-	//	log.Fatal("Unable to start server: ", err)
-	//}
+	config.LoadJWKS()
 
 	server.MustRun(api.NewServer())
 
