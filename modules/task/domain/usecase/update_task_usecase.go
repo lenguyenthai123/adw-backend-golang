@@ -11,12 +11,14 @@ type UpdateTaskUsecase interface {
 
 type updateTaskUsecaseImpl struct {
 	taskWriterRepo TaskWriterRepository
+	taskReaderRepo TaskReaderRepository
 }
 
 var _ UpdateTaskUsecase = (*updateTaskUsecaseImpl)(nil)
 
-func NewUpdateTaskUsecase(taskWriterRepo TaskWriterRepository) UpdateTaskUsecase {
+func NewUpdateTaskUsecase(taskReaderRepo TaskReaderRepository, taskWriterRepo TaskWriterRepository) UpdateTaskUsecase {
 	return &updateTaskUsecaseImpl{
+		taskReaderRepo: taskReaderRepo,
 		taskWriterRepo: taskWriterRepo,
 	}
 }

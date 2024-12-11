@@ -8,6 +8,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	res "backend-golang/core/response"
+	"backend-golang/pkgs/log"
+	"log/slog"
 )
 
 // HandleCreateTask	godoc
@@ -24,11 +28,16 @@ import (
 func (h *TaskHandlerImpl) HandleCreateTask(c *gin.Context) {
 	// Bind request
 	var createTaskRequest req.CreateTaskRequest
-	// if err := c.ShouldBindJSON(&createTaskRequest); err != nil {
-	// 	return res.ErrInvalidRequest(err)
-	// }
+	if err := c.ShouldBindJSON(&createTaskRequest); err != nil {
+		log.JsonLogger.Error("HandleCreateUser.bind_json",
+			slog.String("error", err.Error()),
+			slog.String("request_id", c.Request.Context().Value("X-Request-ID").(string)),
+		)
 
-	// // Validate request
+		panic(res.ErrInvalidRequest(err))
+	}
+
+	// Validate request
 	// if err := h.requestValidator.Struct(&createTaskRequest); err != nil {
 	// 	return res.ErrFieldValidationFailed(err)
 	// }

@@ -39,6 +39,7 @@ func NewServer() (*server.HTTPServer, error) {
 
 	srv := &routes.RouteHandler{
 		UserHandler: routes.NewUserHandler(db, requestValidator),
+		TaskHandler: routes.NewTaskHandler(db, requestValidator),
 	}
 	s.AddGroupRoutes(srv.InitGroupRoutes())
 

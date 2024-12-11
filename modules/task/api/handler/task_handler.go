@@ -23,12 +23,14 @@ type TaskHandlerImpl struct {
 }
 
 func NewTaskHandler(
+	requestValidator *validator.Validate,
 	createTaskUsecase usecase.CreateTaskUsecase,
 	getTaskUsecase usecase.GetTaskUsecase,
 	updateTaskUsecase usecase.UpdateTaskUsecase,
 	deleteTaskUsecase usecase.DeleteTaskUsecase,
 ) TaskHandler {
 	return &TaskHandlerImpl{
+		requestValidator:  requestValidator,
 		createTaskUsecase: createTaskUsecase,
 		getTaskUsecase:    getTaskUsecase,
 		updateTaskUsecase: updateTaskUsecase,
