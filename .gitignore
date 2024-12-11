@@ -1,0 +1,59 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Go build artifacts
+*.test
+*.out
+
+# Cache and logs
+*.log
+*.tmp
+*.cache
+*.bak
+*.swp
+
+# Directory for IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Dependency directories
+vendor/
+
+# Compiled binary
+bin/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Node.js if applicable (for front-end or hybrid apps)
+node_modules/
+
+# Go module files
+go.sum
+go.mod
+
+# Test result files
+coverage.out
+
+# Private environment variables and configuration
+.env
+.env.*
+
+# Other system files
+*.iml
+*.class
+*.jar
+
+# macOS specific
+.AppleDouble
+.LSOverride
+
+# Windows specific
+Desktop.ini
+$RECYCLE.BIN/
