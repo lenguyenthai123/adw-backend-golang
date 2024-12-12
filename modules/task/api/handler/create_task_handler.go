@@ -1,17 +1,16 @@
 package handler
 
 import (
+	res "backend-golang/core/response"
 	"backend-golang/modules/task/api/mapper"
 	"backend-golang/modules/task/api/model/req"
 	response "backend-golang/modules/task/api/model/res"
+	"backend-golang/pkgs/log"
 	"context"
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-
-	res "backend-golang/core/response"
-	"backend-golang/pkgs/log"
-	"log/slog"
 )
 
 // HandleCreateTask	godoc
@@ -29,7 +28,7 @@ func (h *TaskHandlerImpl) HandleCreateTask(c *gin.Context) {
 	// Bind request
 	var createTaskRequest req.CreateTaskRequest
 	if err := c.ShouldBindJSON(&createTaskRequest); err != nil {
-		log.JsonLogger.Error("HandleCreateUser.bind_json",
+		log.JsonLogger.Error("HandleCreateTask.bind_json",
 			slog.String("error", err.Error()),
 			slog.String("request_id", c.Request.Context().Value("X-Request-ID").(string)),
 		)
@@ -43,11 +42,14 @@ func (h *TaskHandlerImpl) HandleCreateTask(c *gin.Context) {
 	// }
 
 	// Convert request to entity
-	taskEntity := mapper.ConvertTaskRequestToTaskEntity(createTaskRequest)
+	taskEntity := mapper.ConvertCreateTaskRequestToTaskEntity(createTaskRequest)
 
 	// Create task
-	h.createTaskUsecase.ExecCreateTask(context.Background(), taskEntity)
+	err := h.createTaskUsecase.ExecCreateTask(context.Background(), taskEntity)
 
+	if err != nil {
+		panic(err)
+	}
 	// Return response
 	c.JSON(http.StatusCreated, response.SuccessResponse{
 		Message: "Task created successfully",

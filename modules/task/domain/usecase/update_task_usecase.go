@@ -6,7 +6,7 @@ import (
 )
 
 type UpdateTaskUsecase interface {
-	ExecUpdateTask(ctx context.Context, taskID string, taskEntity entity.Task) error
+	ExecUpdateTask(ctx context.Context, taskEntity entity.Task) error
 }
 
 type updateTaskUsecaseImpl struct {
@@ -23,7 +23,7 @@ func NewUpdateTaskUsecase(taskReaderRepo TaskReaderRepository, taskWriterRepo Ta
 	}
 }
 
-func (uc updateTaskUsecaseImpl) ExecUpdateTask(ctx context.Context, taskID string, taskEntity entity.Task) error {
+func (uc updateTaskUsecaseImpl) ExecUpdateTask(ctx context.Context, taskEntity entity.Task) error {
 	err := uc.taskWriterRepo.UpdateTask(ctx, taskEntity)
 	if err != nil {
 		return err

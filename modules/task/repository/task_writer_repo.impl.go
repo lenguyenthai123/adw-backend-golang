@@ -25,13 +25,13 @@ func (repo taskWriterRepositoryImpl) InsertTask(_ context.Context, taskEntity en
 
 func (repo taskWriterRepositoryImpl) DeleteTask(_ context.Context, taskID string) error {
 	return repo.db.Executor.
-		Where("id = ?", taskID).
+		Where("\"taskId\" = ?", taskID).
 		Delete(&entity.Task{}).Error
 }
 
 func (repo taskWriterRepositoryImpl) UpdateTask(_ context.Context, taskEntity entity.Task) error {
 	return repo.db.Executor.
 		Model(&entity.Task{}).
-		Where("taskId = ?", taskEntity.TaskID).
+		Where("\"taskId\" = ?", taskEntity.TaskID).
 		Updates(&taskEntity).Error
 }

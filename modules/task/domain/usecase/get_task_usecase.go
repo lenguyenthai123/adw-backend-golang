@@ -22,7 +22,7 @@ func NewGetTaskUsecase(taskReaderRepository TaskReaderRepository) GetTaskUsecase
 }
 
 func (uc getTaskUsecaseImpl) ExecGetTask(ctx context.Context, taskID string) (*entity.Task, error) {
-	taskEntity, err := uc.taskReaderRepository.FindTaskByCondition(ctx, map[string]interface{}{"id": taskID})
+	taskEntity, err := uc.taskReaderRepository.FindTaskByCondition(ctx, map[string]interface{}{"taskId": taskID})
 	if err != nil {
 		return nil, err
 	}

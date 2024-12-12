@@ -33,7 +33,7 @@ func (r *RouteHandler) taskRoute() route.GroupRoute {
 				Handler: r.TaskHandler.HandleCreateTask,
 			},
 			{
-				Path:    "/",
+				Path:    "/:task_id",
 				Method:  method.GET,
 				Handler: r.TaskHandler.HandleGetTask,
 			},
