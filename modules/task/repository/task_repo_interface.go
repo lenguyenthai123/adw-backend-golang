@@ -7,6 +7,7 @@ import (
 
 type TaskReaderRepository interface {
 	FindTaskByCondition(ctx context.Context, condition map[string]interface{}) (*entity.Task, error)
+	FindTaskListByCondition(ctx context.Context, conditions map[string]interface{}) ([]*entity.Task, error)
 }
 
 type TaskWriterRepository interface {
