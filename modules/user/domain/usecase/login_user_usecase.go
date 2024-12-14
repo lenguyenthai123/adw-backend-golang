@@ -22,8 +22,12 @@ type loginUserUseCaseImpl struct {
 
 var _ LoginUserUseCase = (*loginUserUseCaseImpl)(nil)
 
-func NewLoginUserUseCase(tokenProvider TokenProvider, accessTokenTime int, refreshTokenTime int,
-	hashAlgo HashAlgo, readerRepo userReaderRepository) LoginUserUseCase {
+func NewLoginUserUseCase(
+	tokenProvider TokenProvider,
+	accessTokenTime int,
+	refreshTokenTime int,
+	hashAlgo HashAlgo,
+	readerRepo userReaderRepository) LoginUserUseCase {
 	return &loginUserUseCaseImpl{
 		tokenProvider:    tokenProvider,
 		accessTokenTime:  accessTokenTime,

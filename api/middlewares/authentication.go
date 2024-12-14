@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"backend-golang/core"
 	"net/http"
 	"strings"
 
@@ -30,7 +31,30 @@ func Authentication() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		// Token hợp lệ, tiếp tục request
+
+		// Chuyển `token.Claims` sang kiểu `jwt.MapClaims`
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token claims"})
+			c.Abort()
+			return
+		}
+
+		// Lấy giá trị từ claim `userId`
+		userId, exists := claims["userId"].(string)
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "userId not found in token claims"})
+			c.Abort()
+			return
+		}
+
+		// Set requester information in context
+		c.Set(core.CurrentRequesterKeyString, core.RestRequester{
+			ID:   userId,
+			Role: "",
+		})
+
 		c.Next()
+
 	}
 }

@@ -1,6 +1,6 @@
 package core
 
-const CurrentRequesterKeyString = ""
+const CurrentRequesterKeyString = "CurrentRequesterKeyString"
 
 type CurrentRequesterKeyStruct struct{}
 

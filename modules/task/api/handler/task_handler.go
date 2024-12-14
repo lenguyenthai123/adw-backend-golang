@@ -13,6 +13,7 @@ type TaskHandler interface {
 	HandleUpdateTask(c *gin.Context)
 	HandleDeleteTask(c *gin.Context)
 	HandleGetTaskList(c *gin.Context)
+	HandleAnalyzeTask(c *gin.Context)
 }
 
 type TaskHandlerImpl struct {
@@ -22,6 +23,7 @@ type TaskHandlerImpl struct {
 	updateTaskUsecase  usecase.UpdateTaskUsecase
 	deleteTaskUsecase  usecase.DeleteTaskUsecase
 	getTaskListUsecase usecase.GetTaskListUsecase
+	analyzeTaskUsecase usecase.AnalyzeTaskUsecase
 }
 
 func NewTaskHandler(
@@ -31,6 +33,7 @@ func NewTaskHandler(
 	updateTaskUsecase usecase.UpdateTaskUsecase,
 	deleteTaskUsecase usecase.DeleteTaskUsecase,
 	getTaskListUsecase usecase.GetTaskListUsecase,
+	analyzeTaskUsecase usecase.AnalyzeTaskUsecase,
 ) TaskHandler {
 	return &TaskHandlerImpl{
 		requestValidator:   requestValidator,
@@ -39,5 +42,6 @@ func NewTaskHandler(
 		updateTaskUsecase:  updateTaskUsecase,
 		deleteTaskUsecase:  deleteTaskUsecase,
 		getTaskListUsecase: getTaskListUsecase,
+		analyzeTaskUsecase: analyzeTaskUsecase,
 	}
 }

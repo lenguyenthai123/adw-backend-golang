@@ -21,7 +21,8 @@ func NewTaskHandler(db *database.Database, requestValidator *validator.Validate)
 		usecase.NewGetTaskUsecase(taskRepoReader),
 		usecase.NewUpdateTaskUsecase(taskRepoReader, taskRepoWriter),
 		usecase.NewDeleteTaskUsecase(taskRepoWriter),
-		usecase.NewGetTaskListUsecase(taskRepoReader))
+		usecase.NewGetTaskListUsecase(taskRepoReader),
+		usecase.NewAnalyzeTaskUsecase(taskRepoReader))
 }
 
 func (r *RouteHandler) taskRoute() route.GroupRoute {
@@ -52,6 +53,11 @@ func (r *RouteHandler) taskRoute() route.GroupRoute {
 				Path:    "/task_list",
 				Method:  method.GET,
 				Handler: r.TaskHandler.HandleGetTaskList,
+			},
+			{
+				Path:    "/analyze",
+				Method:  method.POST,
+				Handler: r.TaskHandler.HandleAnalyzeTask,
 			},
 		},
 	}

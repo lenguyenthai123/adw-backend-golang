@@ -20,3 +20,11 @@ func ConvertTaskEntityToTaskRes(task entity.Task) res.TaskResponse {
 		LastUpdated:   task.LastUpdated,
 	}
 }
+
+func ConvertTaskAna(taskList []entity.Task) []res.TaskResponse {
+	var taskResList []res.TaskResponse
+	for _, task := range taskList {
+		taskResList = append(taskResList, ConvertTaskEntityToTaskRes(task))
+	}
+	return taskResList
+}

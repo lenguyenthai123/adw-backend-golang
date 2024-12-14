@@ -80,3 +80,14 @@ func (repo taskReaderRepositoryImpl) FindTaskListByCondition(ctx context.Context
 
 	return tasks, nil
 }
+
+func (repo taskReaderRepositoryImpl) FindTaskListByConditionV2(ctx context.Context, condition map[string]interface{}) ([]*entity.Task, error) {
+	var taskList []*entity.Task
+
+	err := repo.db.Executor.Where(condition).Find(&taskList).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return taskList, nil
+}
