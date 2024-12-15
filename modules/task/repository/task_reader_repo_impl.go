@@ -86,8 +86,8 @@ func (repo taskReaderRepositoryImpl) FindTaskListByRangeTime(ctx context.Context
 	query := repo.db.Executor.WithContext(ctx).Model(&entity.Task{})
 	err := query.
 		Where("\"userId\" = ?", userId).
-		Where("\"dueDate\" >= ?", startTime).
-		Where("\"dueDate\" <= ?", endTime).
+		Where("((\"dueDate\" >= ? AND \"dueDate\" <= ?) OR (\"startDate\" >= ? AND \"startDate\" <= ?))",
+			startTime, endTime, startTime, endTime).
 		Find(&taskList).Error
 	if err != nil {
 		return nil, err

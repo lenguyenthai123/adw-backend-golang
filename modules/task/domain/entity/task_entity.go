@@ -13,6 +13,7 @@ type Task struct {
 	EstimatedTime int       `gorm:"column:estimatedTime"`
 	Status        string    `gorm:"column:status;default:Todo"`
 	CreatedAt     time.Time `gorm:"column:createdAt;autoCreateTime"`
+	StartDate     time.Time `gorm:"column:startDate"`
 	DueDate       time.Time `gorm:"column:dueDate"`
 	LastUpdated   time.Time `gorm:"column:lastUpdated;autoUpdateTime"`
 }

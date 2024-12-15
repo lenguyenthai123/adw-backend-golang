@@ -9,6 +9,7 @@ type TaskOpenai struct {
 	Priority      string `json:"priority" jsonschema:"enum=Low,enum=Medium,enum=High" jsonschema_description:"The priority level of the task"`
 	EstimatedTime int    `json:"estimatedTime" jsonschema_description:"Estimated time in hours to complete the task"`
 	Status        string `json:"status" jsonschema:"enum=Todo,enum=InProgress,enum=Completed,enum=Expired" jsonschema_description:"The current status of the task"`
+	StartDate     string `json:"startDate" jsonschema_description:"The start date time of the task"`
 	DueDate       string `json:"dueDate" jsonschema_description:"Deadline for the task"`
 	LastUpdated   string `json:"lastUpdated" jsonschema_description:"Timestamp when the task was last updated"`
 }

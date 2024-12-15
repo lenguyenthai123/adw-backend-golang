@@ -11,6 +11,7 @@ type TaskResponse struct {
 	EstimatedTime int       `json:"estimatedTime"`
 	Status        string    `json:"status"`
 	CreatedAt     time.Time `json:"createdAt"`
+	StartDate     time.Time `json:"startDate"`
 	DueDate       time.Time `json:"dueDate"`
 	LastUpdated   time.Time `json:"lastUpdated"`
 }
