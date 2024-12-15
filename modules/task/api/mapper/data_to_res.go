@@ -28,3 +28,17 @@ func ConvertTaskAna(taskList []entity.Task) []res.TaskResponse {
 	}
 	return taskResList
 }
+
+func ConvertTaskToTaskOpenai(task entity.Task) entity.TaskOpenai {
+	return entity.TaskOpenai{
+		TaskID:        task.TaskID,
+		UserID:        task.UserID,
+		TaskName:      task.TaskName,
+		Description:   task.Description,
+		Priority:      task.Priority,
+		EstimatedTime: task.EstimatedTime,
+		Status:        task.Status,
+		DueDate:       task.DueDate.Format("2006-01-02 15:04:05"),
+		LastUpdated:   task.LastUpdated.Format("2006-01-02 15:04:05"),
+	}
+}

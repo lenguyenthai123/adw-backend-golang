@@ -7,12 +7,14 @@ import (
 	"backend-golang/pkgs/dbs/postgres"
 	"backend-golang/pkgs/transport/http/server"
 	"backend-golang/utils"
+	"github.com/openai/openai-go"
 	"time"
 )
 
 func NewServer() (*server.HTTPServer, error) {
 	appConfig := config.LoadConfig(&models.AppConfig{}).(*models.AppConfig)
 	dbConfig := config.LoadConfig(&models.DBConfig{}).(*models.DBConfig)
+	//openaiConfig := config.LoadConfig(&models.OpenaiConfig{}).(*models.OpenaiConfig)
 
 	connection := postgres.Connection{
 		SSLMode:               postgres.Require,
@@ -28,6 +30,7 @@ func NewServer() (*server.HTTPServer, error) {
 	}
 
 	db := postgres.InitDatabase(connection)
+	openaiClient := openai.NewClient() // Thay bằng API key của bạn
 
 	s := server.NewHTTPServer(
 		server.AddName(appConfig.ServiceName),
@@ -39,7 +42,7 @@ func NewServer() (*server.HTTPServer, error) {
 
 	srv := &routes.RouteHandler{
 		UserHandler: routes.NewUserHandler(db, requestValidator),
-		TaskHandler: routes.NewTaskHandler(db, requestValidator),
+		TaskHandler: routes.NewTaskHandler(db, openaiClient, requestValidator),
 	}
 	s.AddGroupRoutes(srv.InitGroupRoutes())
 

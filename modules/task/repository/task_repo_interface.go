@@ -10,7 +10,7 @@ type TaskReaderRepository interface {
 	FindTaskListByCondition(ctx context.Context, conditions map[string]interface{}) ([]*entity.Task, error)
 
 	// Version 2
-	FindTaskListByConditionV2(ctx context.Context, conditions map[string]interface{}) ([]*entity.Task, error)
+	FindTaskListByRangeTime(ctx context.Context, userId, startTime, endTime string) ([]*entity.Task, error)
 }
 
 type TaskWriterRepository interface {

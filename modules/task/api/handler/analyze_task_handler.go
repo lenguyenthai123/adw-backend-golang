@@ -1,14 +1,15 @@
 package handler
 
 import (
+	"backend-golang/core"
 	res "backend-golang/core/response"
+	"backend-golang/modules/task/api/mapper"
 	"backend-golang/modules/task/api/model/req"
-	response "backend-golang/modules/task/api/model/res"
 	"backend-golang/pkgs/log"
+	"context"
 	"github.com/gin-gonic/gin"
 	"log/slog"
 	"net/http"
-	"time"
 )
 
 func (h *TaskHandlerImpl) HandleAnalyzeTask(c *gin.Context) {
@@ -23,8 +24,8 @@ func (h *TaskHandlerImpl) HandleAnalyzeTask(c *gin.Context) {
 	}
 
 	// Create task
-	startTime, err1 := time.Parse(time.RFC3339, analyzeTaskRequest.StartTime)
-	endTime, err2 := time.Parse(time.RFC3339, analyzeTaskRequest.EndTime)
+	startTime, err1 := mapper.ConvertToUTC7(analyzeTaskRequest.StartTime)
+	endTime, err2 := mapper.ConvertToUTC7(analyzeTaskRequest.EndTime)
 
 	if err1 != nil || err2 != nil {
 		log.JsonLogger.Error("HandlerAnalyzeTask.parse_time",
@@ -33,15 +34,16 @@ func (h *TaskHandlerImpl) HandleAnalyzeTask(c *gin.Context) {
 		)
 		panic(res.ErrInvalidRequest(err1))
 	}
+	// Get user from context, require middleware
+	ctx := context.WithValue(c.Request.Context(), core.CurrentRequesterKeyStruct{},
+		c.MustGet(core.CurrentRequesterKeyString).(core.Requester))
 
-	err := h.analyzeTaskUsecase.ExecAnalyzeTask(c.Request.Context(), startTime, endTime)
+	openaiResponse, err := h.analyzeTaskUsecase.ExecAnalyzeTask(ctx, startTime, endTime)
 
 	if err != nil {
 		panic(err)
 	}
 	// Return response
-	c.JSON(http.StatusCreated, response.SuccessResponse{
-		Message: "Task created successfully",
-	})
+	res.ResponseSuccess(c, res.NewSuccessResponse(http.StatusOK, "success", openaiResponse))
 
 }

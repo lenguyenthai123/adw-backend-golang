@@ -1,17 +1,18 @@
 package routes
 
 import (
+	"backend-golang/api/middlewares"
 	taskHandler "backend-golang/modules/task/api/handler"
 	"backend-golang/modules/task/domain/usecase"
 	"backend-golang/modules/task/repository"
 	database "backend-golang/pkgs/dbs/postgres"
 	"backend-golang/pkgs/transport/http/method"
 	"backend-golang/pkgs/transport/http/route"
-
 	"github.com/go-playground/validator/v10"
+	"github.com/openai/openai-go"
 )
 
-func NewTaskHandler(db *database.Database, requestValidator *validator.Validate) taskHandler.TaskHandler {
+func NewTaskHandler(db *database.Database, openaiClient *openai.Client, requestValidator *validator.Validate) taskHandler.TaskHandler {
 	// Task Repository
 	taskRepoReader := repository.NewTaskReaderRepository(*db)
 	taskRepoWriter := repository.NewTaskWriterRepository(*db)
@@ -22,7 +23,7 @@ func NewTaskHandler(db *database.Database, requestValidator *validator.Validate)
 		usecase.NewUpdateTaskUsecase(taskRepoReader, taskRepoWriter),
 		usecase.NewDeleteTaskUsecase(taskRepoWriter),
 		usecase.NewGetTaskListUsecase(taskRepoReader),
-		usecase.NewAnalyzeTaskUsecase(taskRepoReader))
+		usecase.NewAnalyzeTaskUsecase(taskRepoReader, openaiClient))
 }
 
 func (r *RouteHandler) taskRoute() route.GroupRoute {
@@ -58,6 +59,9 @@ func (r *RouteHandler) taskRoute() route.GroupRoute {
 				Path:    "/analyze",
 				Method:  method.POST,
 				Handler: r.TaskHandler.HandleAnalyzeTask,
+				Middlewares: route.Middlewares(
+					middlewares.Authentication(),
+				),
 			},
 		},
 	}

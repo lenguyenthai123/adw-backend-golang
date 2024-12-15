@@ -81,10 +81,14 @@ func (repo taskReaderRepositoryImpl) FindTaskListByCondition(ctx context.Context
 	return tasks, nil
 }
 
-func (repo taskReaderRepositoryImpl) FindTaskListByConditionV2(ctx context.Context, condition map[string]interface{}) ([]*entity.Task, error) {
+func (repo taskReaderRepositoryImpl) FindTaskListByRangeTime(ctx context.Context, userId, startTime, endTime string) ([]*entity.Task, error) {
 	var taskList []*entity.Task
-
-	err := repo.db.Executor.Where(condition).Find(&taskList).Error
+	query := repo.db.Executor.WithContext(ctx).Model(&entity.Task{})
+	err := query.
+		Where("\"userId\" = ?", userId).
+		Where("\"dueDate\" >= ?", startTime).
+		Where("\"dueDate\" <= ?", endTime).
+		Find(&taskList).Error
 	if err != nil {
 		return nil, err
 	}
