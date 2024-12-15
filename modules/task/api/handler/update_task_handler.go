@@ -26,6 +26,7 @@ import (
 // @Router       /task/:task_id [patch]
 
 func (h *TaskHandlerImpl) HandleUpdateTask(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	taskID := c.Param("task_id")
 
 	if taskID == "" {

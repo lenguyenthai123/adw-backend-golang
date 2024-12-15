@@ -7,12 +7,14 @@ import (
 	"backend-golang/modules/task/api/model/req"
 	"backend-golang/pkgs/log"
 	"context"
-	"github.com/gin-gonic/gin"
 	"log/slog"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (h *TaskHandlerImpl) HandleAnalyzeTask(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	// Bind request
 	var analyzeTaskRequest req.AnalyzeTaskRequest
 	if err := c.ShouldBindJSON(&analyzeTaskRequest); err != nil {
