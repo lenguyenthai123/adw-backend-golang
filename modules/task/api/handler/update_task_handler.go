@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"backend-golang/core"
 	res "backend-golang/core/response"
 	"backend-golang/modules/task/api/mapper"
 	"backend-golang/modules/task/api/model/req"
@@ -42,9 +43,13 @@ func (h *TaskHandlerImpl) HandleUpdateTask(c *gin.Context) {
 		panic(res.ErrInvalidRequest(err))
 	}
 
+	// Get user from context, require middleware
+	ctx := context.WithValue(c.Request.Context(), core.CurrentRequesterKeyStruct{},
+		c.MustGet(core.CurrentRequesterKeyString).(core.Requester))
+
 	// Update task
 	if err := h.updateTaskUsecase.ExecUpdateTask(
-		context.Background(),
+		ctx,
 		mapper.ConvertUpdateTaskRequestToTaskEntity(updateTaskRequest, taskID),
 	); err != nil {
 		panic(err)

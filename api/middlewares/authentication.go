@@ -53,7 +53,6 @@ func Authentication() gin.HandlerFunc {
 			ID:   userId,
 			Role: "",
 		})
-
 		c.Next()
 
 	}

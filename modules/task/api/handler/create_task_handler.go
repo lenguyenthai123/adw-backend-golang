@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"backend-golang/core"
 	res "backend-golang/core/response"
 	"backend-golang/modules/task/api/mapper"
 	"backend-golang/modules/task/api/model/req"
@@ -44,8 +45,12 @@ func (h *TaskHandlerImpl) HandleCreateTask(c *gin.Context) {
 	// Convert request to entity
 	taskEntity := mapper.ConvertCreateTaskRequestToTaskEntity(createTaskRequest)
 
+	// Get user from context, require middleware
+	ctx := context.WithValue(c.Request.Context(), core.CurrentRequesterKeyStruct{},
+		c.MustGet(core.CurrentRequesterKeyString).(core.Requester))
+
 	// Create task
-	err := h.createTaskUsecase.ExecCreateTask(context.Background(), taskEntity)
+	err := h.createTaskUsecase.ExecCreateTask(ctx, taskEntity)
 
 	if err != nil {
 		panic(err)

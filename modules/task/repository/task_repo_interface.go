@@ -16,5 +16,5 @@ type TaskReaderRepository interface {
 type TaskWriterRepository interface {
 	InsertTask(ctx context.Context, taskEntity entity.Task) error
 	UpdateTask(ctx context.Context, taskEntity entity.Task) error
-	DeleteTask(ctx context.Context, taskID string) error
+	DeleteTask(ctx context.Context, userId int, taskID string) error
 }

@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"backend-golang/core"
+	"backend-golang/modules/task/constant"
 	"backend-golang/modules/task/domain/entity"
 	"context"
 )
@@ -22,9 +24,11 @@ func NewCreateTaskUsecase(writerRepo TaskWriterRepository) CreateTaskUsecase {
 }
 
 func (uc createTaskUsecaseImpl) ExecCreateTask(ctx context.Context, taskEntity entity.Task) error {
+	userId := ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserIDInt()
+	taskEntity.UserID = userId
 	err := uc.writerRepo.InsertTask(ctx, taskEntity)
 	if err != nil {
-		return err
+		return constant.ErrorCreateTaskFail(err)
 	}
 
 	return nil

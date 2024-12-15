@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"backend-golang/core"
 	res "backend-golang/core/response"
 	"backend-golang/modules/task/domain/entity"
 	"context"
@@ -42,8 +43,12 @@ func (h *TaskHandlerImpl) HandleGetTaskList(c *gin.Context) {
 		panic(res.ErrInvalidRequest(errors.New("page must be greater than 0")))
 	}
 
+	// Get user from context, require middleware
+	ctx := context.WithValue(c.Request.Context(), core.CurrentRequesterKeyStruct{},
+		c.MustGet(core.CurrentRequesterKeyString).(core.Requester))
+
 	// Fetch tasks using usecase
-	tasks, err := h.getTaskListUsecase.ExecGetTaskList(context.Background(), taskSearchFilter)
+	tasks, err := h.getTaskListUsecase.ExecGetTaskList(ctx, taskSearchFilter)
 	if err != nil {
 		panic(res.ErrInternalServerError(err)) // Assuming you have a response helper function
 	}

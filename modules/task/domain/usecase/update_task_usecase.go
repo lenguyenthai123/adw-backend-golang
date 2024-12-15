@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"backend-golang/core"
+	"backend-golang/modules/task/constant"
 	"backend-golang/modules/task/domain/entity"
 	"context"
 )
@@ -24,9 +26,20 @@ func NewUpdateTaskUsecase(taskReaderRepo TaskReaderRepository, taskWriterRepo Ta
 }
 
 func (uc updateTaskUsecaseImpl) ExecUpdateTask(ctx context.Context, taskEntity entity.Task) error {
-	err := uc.taskWriterRepo.UpdateTask(ctx, taskEntity)
-	if err != nil {
-		return err
+	userId := ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserIDInt()
+	taskEntity.UserID = userId
+
+	foundedTask, err := uc.taskReaderRepo.FindTaskByCondition(ctx, map[string]interface{}{
+		"taskId": taskEntity.TaskID,
+		"userId": taskEntity.UserID,
+	})
+	if foundedTask == nil {
+		return constant.ErrorNotFoundTask(err)
+	}
+
+	err1 := uc.taskWriterRepo.UpdateTask(ctx, taskEntity)
+	if err1 != nil {
+		return constant.ErrorNotFoundTask(err1)
 	}
 
 	return nil

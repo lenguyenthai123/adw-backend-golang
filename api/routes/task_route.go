@@ -34,26 +34,41 @@ func (r *RouteHandler) taskRoute() route.GroupRoute {
 				Path:    "/",
 				Method:  method.POST,
 				Handler: r.TaskHandler.HandleCreateTask,
+				Middlewares: route.Middlewares(
+					middlewares.Authentication(),
+				),
 			},
 			{
 				Path:    "/:task_id",
 				Method:  method.GET,
 				Handler: r.TaskHandler.HandleGetTask,
+				Middlewares: route.Middlewares(
+					middlewares.Authentication(),
+				),
 			},
 			{
 				Path:    "/:task_id",
 				Method:  method.PATCH,
 				Handler: r.TaskHandler.HandleUpdateTask,
+				Middlewares: route.Middlewares(
+					middlewares.Authentication(),
+				),
 			},
 			{
 				Path:    "/:task_id",
 				Method:  method.DELETE,
 				Handler: r.TaskHandler.HandleDeleteTask,
+				Middlewares: route.Middlewares(
+					middlewares.Authentication(),
+				),
 			},
 			{
 				Path:    "/task_list",
 				Method:  method.GET,
 				Handler: r.TaskHandler.HandleGetTaskList,
+				Middlewares: route.Middlewares(
+					middlewares.Authentication(),
+				),
 			},
 			{
 				Path:    "/analyze",

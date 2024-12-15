@@ -12,7 +12,6 @@ import (
 func ConvertCreateTaskRequestToTaskEntity(req req.CreateTaskRequest) entity.Task {
 	// Map the request data to the Task entity
 	task := entity.Task{
-		UserID:        req.UserID,
 		TaskName:      req.TaskName,
 		Description:   req.Description,
 		Priority:      req.Priority,

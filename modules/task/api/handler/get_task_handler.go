@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"backend-golang/core"
 	res "backend-golang/core/response"
 	"context"
 	"errors"
@@ -27,7 +28,11 @@ func (h *TaskHandlerImpl) HandleGetTask(c *gin.Context) {
 		panic(res.ErrInvalidRequest(errors.New("task_id is required")))
 	}
 
-	task, err := h.getTaskUsecase.ExecGetTask(context.Background(), taskID)
+	// Get user from context, require middleware
+	ctx := context.WithValue(c.Request.Context(), core.CurrentRequesterKeyStruct{},
+		c.MustGet(core.CurrentRequesterKeyString).(core.Requester))
+
+	task, err := h.getTaskUsecase.ExecGetTask(ctx, taskID)
 
 	if err != nil {
 		panic(err)

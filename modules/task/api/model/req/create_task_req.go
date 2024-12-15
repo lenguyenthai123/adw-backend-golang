@@ -1,7 +1,6 @@
 package req
 
 type CreateTaskRequest struct {
-	UserID        int    `json:"userId" binding:"required"`
 	TaskName      string `json:"taskName" binding:"required"`
 	Description   string `json:"description"`
 	Priority      string `json:"priority" binding:"required,oneof=Low Medium High"`

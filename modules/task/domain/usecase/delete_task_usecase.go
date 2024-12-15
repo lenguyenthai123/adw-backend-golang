@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"backend-golang/core"
+	"backend-golang/modules/task/constant"
 	"context"
 )
 
@@ -21,9 +23,10 @@ func NewDeleteTaskUsecase(writerRepo TaskWriterRepository) DeleteTaskUsecase {
 }
 
 func (uc deleteTaskUsecaseImpl) ExecDeleteTask(ctx context.Context, taskID string) error {
-	err := uc.writerRepo.DeleteTask(ctx, taskID)
+	userId := ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserIDInt()
+	err := uc.writerRepo.DeleteTask(ctx, userId, taskID)
 	if err != nil {
-		return err
+		return constant.ErrorNotFoundTask(err)
 	}
 
 	return nil

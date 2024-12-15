@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"backend-golang/core"
+	"backend-golang/modules/task/constant"
 	"backend-golang/modules/task/domain/entity"
 	"context"
 )
@@ -25,9 +27,9 @@ func (uc getTaskListUsecaseImpl) ExecGetTaskList(ctx context.Context, searchFilt
 	// Build conditions for filtering
 	conditions := make(map[string]interface{})
 
-	if searchFilter.UserID != nil {
-		conditions["userId"] = *searchFilter.UserID
-	}
+	userId := ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserIDInt()
+	conditions["userId"] = userId
+
 	if searchFilter.Status != nil {
 		conditions["status"] = *searchFilter.Status
 	}
@@ -50,7 +52,7 @@ func (uc getTaskListUsecaseImpl) ExecGetTaskList(ctx context.Context, searchFilt
 
 	tasks, err := uc.taskReaderRepository.FindTaskListByCondition(ctx, conditions)
 	if err != nil {
-		return nil, err
+		return nil, constant.ErrorNotFoundTaskList(err)
 	}
 
 	return tasks, nil
