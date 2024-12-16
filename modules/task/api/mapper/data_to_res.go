@@ -16,6 +16,7 @@ func ConvertTaskEntityToTaskRes(task entity.Task) res.TaskResponse {
 		EstimatedTime: task.EstimatedTime,
 		Status:        task.Status,
 		CreatedAt:     task.CreatedAt,
+		StartDate:     task.StartDate,
 		DueDate:       task.DueDate,
 		LastUpdated:   task.LastUpdated,
 	}
@@ -46,6 +47,7 @@ func ConvertTaskToTaskOpenai(task entity.Task) entity.TaskOpenai {
 		Priority:      task.Priority,
 		EstimatedTime: task.EstimatedTime,
 		Status:        task.Status,
+		StartDate:     task.StartDate.Format("2006-01-02 15:04:05"),
 		DueDate:       task.DueDate.Format("2006-01-02 15:04:05"),
 		LastUpdated:   task.LastUpdated.Format("2006-01-02 15:04:05"),
 	}
