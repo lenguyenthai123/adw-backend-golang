@@ -29,6 +29,8 @@ import (
 // @Router       /tasks [get]
 
 func (h *TaskHandlerImpl) HandleGetTaskList(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
 	var taskSearchFilter entity.TaskSearchFilterEntity
 
 	// Bind the query parameters to the TaskSearchFilterEntity

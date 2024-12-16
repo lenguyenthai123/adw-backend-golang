@@ -22,6 +22,7 @@ import (
 // @Router       /task/:task_id [delete]
 
 func (h *TaskHandlerImpl) HandleDeleteTask(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	taskID := c.Param("task_id")
 
 	if taskID == "" {
