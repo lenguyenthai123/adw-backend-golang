@@ -26,7 +26,7 @@ import (
 // @Router       /task [post]
 
 func (h *TaskHandlerImpl) HandleCreateTask(c *gin.Context) {
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	//c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	// Bind request
 	var createTaskRequest req.CreateTaskRequest
 	if err := c.ShouldBindJSON(&createTaskRequest); err != nil {

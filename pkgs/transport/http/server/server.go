@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -54,21 +53,11 @@ func (s *HTTPServer) Run() {
 		route.AddMiddlewares(s.Middlewares...),
 		route.AddHealthCheckRoute(),
 		route.AddNoRouteHandler(),
-		route.StrictSlash(s.StrictSlash),
+		route.StrictSlash(false),
 		route.AddGroupRoutes(s.GroupRoutes),
 		route.AddRoutes(s.Routes),
 		route.AddGinOptions(s.GinOptions...),
 	)
-
-	r.Use(cors.New(cors.Config{
-		AllowAllOrigins: true,
-		AllowHeaders: []string{
-			"Origin",
-			"Content-Type",
-			"Accept",
-			"Authorization",
-		},
-	}))
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

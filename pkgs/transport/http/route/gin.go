@@ -1,6 +1,7 @@
 package route
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -13,6 +14,18 @@ type GinOption func(*gin.Engine)
 // The function returns a pointer to the created gin.Engine.
 func NewGin(options ...GinOption) *gin.Engine {
 	r := gin.New()
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins: true,                                                                 // Cho phép tất cả các origin
+		AllowMethods:    []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"}, // Cho phép tất cả các phương thức HTTP phổ biến
+		AllowHeaders: []string{
+			"Origin",
+			"Content-Type",
+			"Accept",
+			"Authorization",
+			"X-Requested-With", // Header hay được dùng bởi các frontend frameworks
+		},
+		AllowCredentials: true, // Nếu cần hỗ trợ cookie hoặc xác thực
+	}))
 	r.Use(gin.Recovery())
 
 	for _, option := range options {
