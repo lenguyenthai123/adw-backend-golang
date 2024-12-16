@@ -3,6 +3,7 @@ package handler
 import (
 	"backend-golang/core"
 	res "backend-golang/core/response"
+	"backend-golang/modules/task/api/mapper"
 	"backend-golang/modules/task/domain/entity"
 	"context"
 	"errors"
@@ -53,6 +54,8 @@ func (h *TaskHandlerImpl) HandleGetTaskList(c *gin.Context) {
 		panic(res.ErrInternalServerError(err)) // Assuming you have a response helper function
 	}
 
+	taskResList := mapper.ConvertTaskListToTaskResList(tasks)
+
 	// Respond with success
-	res.ResponseSuccess(c, res.NewSuccessResponse(http.StatusOK, "Tasks retrieved successfully", tasks))
+	res.ResponseSuccess(c, res.NewSuccessResponse(http.StatusOK, "Tasks retrieved successfully", taskResList))
 }

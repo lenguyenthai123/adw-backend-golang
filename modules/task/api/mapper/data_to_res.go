@@ -21,10 +21,18 @@ func ConvertTaskEntityToTaskRes(task entity.Task) res.TaskResponse {
 	}
 }
 
-func ConvertTaskAna(taskList []entity.Task) []res.TaskResponse {
+func ConvertTaskListToTaskResList(taskList []*entity.Task) []res.TaskResponse {
 	var taskResList []res.TaskResponse
 	for _, task := range taskList {
-		taskResList = append(taskResList, ConvertTaskEntityToTaskRes(task))
+		taskResList = append(taskResList, ConvertTaskEntityToTaskRes(*task))
+	}
+	return taskResList
+}
+
+func ConvertTaskOpenaiResponseToTaskOpenaiResponseRes(taskList []*entity.Task) []res.TaskResponse {
+	var taskResList []res.TaskResponse
+	for _, task := range taskList {
+		taskResList = append(taskResList, ConvertTaskEntityToTaskRes(*task))
 	}
 	return taskResList
 }

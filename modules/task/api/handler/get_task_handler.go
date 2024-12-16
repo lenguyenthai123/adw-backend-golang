@@ -3,6 +3,7 @@ package handler
 import (
 	"backend-golang/core"
 	res "backend-golang/core/response"
+	"backend-golang/modules/task/api/mapper"
 	"context"
 	"errors"
 	"net/http"
@@ -38,5 +39,6 @@ func (h *TaskHandlerImpl) HandleGetTask(c *gin.Context) {
 		panic(err)
 	}
 
-	res.ResponseSuccess(c, res.NewSuccessResponse(http.StatusOK, "success", task))
+	taskRes := mapper.ConvertTaskEntityToTaskRes(*task)
+	res.ResponseSuccess(c, res.NewSuccessResponse(http.StatusOK, "success", taskRes))
 }
