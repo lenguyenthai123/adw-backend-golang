@@ -44,5 +44,4 @@ func (h *TaskHandlerImpl) HandleApplyAnalyzedTask(c *gin.Context) {
 	}
 	// Return response
 	res.ResponseSuccess(c, res.NewSuccessResponse(http.StatusOK, "Apply change task list successfully", nil))
-
 }

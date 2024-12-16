@@ -41,7 +41,6 @@ func ConvertTaskOpenaiResponseToTaskOpenaiResponseRes(taskList []*entity.Task) [
 func ConvertTaskToTaskOpenai(task entity.Task) entity.TaskOpenai {
 	return entity.TaskOpenai{
 		TaskID:        task.TaskID,
-		UserID:        task.UserID,
 		TaskName:      task.TaskName,
 		Description:   task.Description,
 		Priority:      task.Priority,
@@ -49,6 +48,5 @@ func ConvertTaskToTaskOpenai(task entity.Task) entity.TaskOpenai {
 		Status:        task.Status,
 		StartDate:     task.StartDate.Format("2006-01-02 15:04:05"),
 		DueDate:       task.DueDate.Format("2006-01-02 15:04:05"),
-		LastUpdated:   task.LastUpdated.Format("2006-01-02 15:04:05"),
 	}
 }
