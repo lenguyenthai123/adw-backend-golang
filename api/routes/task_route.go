@@ -23,7 +23,8 @@ func NewTaskHandler(db *database.Database, openaiClient *openai.Client, requestV
 		usecase.NewUpdateTaskUsecase(taskRepoReader, taskRepoWriter),
 		usecase.NewDeleteTaskUsecase(taskRepoWriter),
 		usecase.NewGetTaskListUsecase(taskRepoReader),
-		usecase.NewAnalyzeTaskUsecase(taskRepoReader, openaiClient))
+		usecase.NewAnalyzeTaskUsecase(taskRepoReader, openaiClient),
+		usecase.NewApplyAnalyzedTaskUsecase(taskRepoWriter))
 }
 
 func (r *RouteHandler) taskRoute() route.GroupRoute {
@@ -74,6 +75,14 @@ func (r *RouteHandler) taskRoute() route.GroupRoute {
 				Path:    "/analyze",
 				Method:  method.POST,
 				Handler: r.TaskHandler.HandleAnalyzeTask,
+				Middlewares: route.Middlewares(
+					middlewares.Authentication(),
+				),
+			},
+			{
+				Path:    "/analyze/apply",
+				Method:  method.POST,
+				Handler: r.TaskHandler.HandleApplyAnalyzedTask,
 				Middlewares: route.Middlewares(
 					middlewares.Authentication(),
 				),

@@ -31,3 +31,21 @@ func ErrorCreateTaskFail(err error) *res.ErrorResponse {
 		"ERR_CREATE_TASK_FAIL",
 	)
 }
+
+func ErrorMissingTaskIDWhenUpdate() *res.ErrorResponse {
+	return res.NewErrorResponse(
+		http.StatusBadRequest,
+		nil,
+		"Missing task id when update",
+		"ERR_MISSING_TASK_ID_WHEN_UPDATE",
+	)
+}
+
+func ErrrorUpdateTaskListFailed(err error) *res.ErrorResponse {
+	return res.NewErrorResponse(
+		http.StatusInternalServerError,
+		err,
+		"Update task list failed",
+		"ERR_UPDATE_TASK_LIST_FAILED",
+	)
+}

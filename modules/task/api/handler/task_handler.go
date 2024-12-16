@@ -14,16 +14,18 @@ type TaskHandler interface {
 	HandleDeleteTask(c *gin.Context)
 	HandleGetTaskList(c *gin.Context)
 	HandleAnalyzeTask(c *gin.Context)
+	HandleApplyAnalyzedTask(c *gin.Context)
 }
 
 type TaskHandlerImpl struct {
-	requestValidator   *validator.Validate
-	createTaskUsecase  usecase.CreateTaskUsecase
-	getTaskUsecase     usecase.GetTaskUsecase
-	updateTaskUsecase  usecase.UpdateTaskUsecase
-	deleteTaskUsecase  usecase.DeleteTaskUsecase
-	getTaskListUsecase usecase.GetTaskListUsecase
-	analyzeTaskUsecase usecase.AnalyzeTaskUsecase
+	requestValidator         *validator.Validate
+	createTaskUsecase        usecase.CreateTaskUsecase
+	getTaskUsecase           usecase.GetTaskUsecase
+	updateTaskUsecase        usecase.UpdateTaskUsecase
+	deleteTaskUsecase        usecase.DeleteTaskUsecase
+	getTaskListUsecase       usecase.GetTaskListUsecase
+	analyzeTaskUsecase       usecase.AnalyzeTaskUsecase
+	applyAnalyzedTaskUsecase usecase.ApplyAnalyzedTaskUsecase
 }
 
 func NewTaskHandler(
@@ -34,14 +36,17 @@ func NewTaskHandler(
 	deleteTaskUsecase usecase.DeleteTaskUsecase,
 	getTaskListUsecase usecase.GetTaskListUsecase,
 	analyzeTaskUsecase usecase.AnalyzeTaskUsecase,
+	applyAnalyzedTaskUsecase usecase.ApplyAnalyzedTaskUsecase,
+
 ) TaskHandler {
 	return &TaskHandlerImpl{
-		requestValidator:   requestValidator,
-		createTaskUsecase:  createTaskUsecase,
-		getTaskUsecase:     getTaskUsecase,
-		updateTaskUsecase:  updateTaskUsecase,
-		deleteTaskUsecase:  deleteTaskUsecase,
-		getTaskListUsecase: getTaskListUsecase,
-		analyzeTaskUsecase: analyzeTaskUsecase,
+		requestValidator:         requestValidator,
+		createTaskUsecase:        createTaskUsecase,
+		getTaskUsecase:           getTaskUsecase,
+		updateTaskUsecase:        updateTaskUsecase,
+		deleteTaskUsecase:        deleteTaskUsecase,
+		getTaskListUsecase:       getTaskListUsecase,
+		analyzeTaskUsecase:       analyzeTaskUsecase,
+		applyAnalyzedTaskUsecase: applyAnalyzedTaskUsecase,
 	}
 }

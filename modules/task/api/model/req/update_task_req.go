@@ -1,6 +1,7 @@
 package req
 
 type UpdateTaskRequest struct {
+	TaskID        string `json:"taskId"`
 	TaskName      string `json:"taskName"`
 	Description   string `json:"description"`
 	Priority      string `json:"priority" binding:"oneof=Low Medium High"`

@@ -4,6 +4,7 @@ import (
 	"backend-golang/modules/task/domain/entity"
 	database "backend-golang/pkgs/dbs/postgres"
 	"context"
+	"log/slog"
 )
 
 type taskWriterRepositoryImpl struct {
@@ -36,4 +37,26 @@ func (repo taskWriterRepositoryImpl) UpdateTask(_ context.Context, taskEntity en
 		Where("\"taskId\" = ?", taskEntity.TaskID).
 		Where("\"userId\" = ?", taskEntity.UserID).
 		Updates(&taskEntity).Error
+}
+
+func (repo taskWriterRepositoryImpl) UpdateTaskList(ctx context.Context, userID string, taskEntityList []*entity.Task) error {
+	for _, task := range taskEntityList {
+		slog.Any("task: ", task)
+		slog.Any("task: ", *task)
+		slog.Any("(*task).TaskID: ", (*task).TaskID)
+		slog.Any("task.TaskID: ", task.TaskID)
+
+		err := repo.db.Executor.Model(&entity.Task{}).
+			Where("\"taskId\" = ?", (*task).TaskID).
+			Where("\"userId\" = ?", userID).
+			Updates(&map[string]interface{}{
+				"priority":  (*task).Priority,
+				"startDate": (*task).StartDate,
+				"dueDate":   (*task).DueDate,
+			}).Error
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
