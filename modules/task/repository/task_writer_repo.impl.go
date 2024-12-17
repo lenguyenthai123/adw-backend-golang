@@ -67,16 +67,3 @@ func (repo taskWriterRepositoryImpl) UpdateTaskList(ctx context.Context, userID 
 	}
 	return nil
 }
-
-func (repo taskWriterRepositoryImpl) DeleteTaskList(ctx context.Context, userId string, taskIDList []int) error {
-	// Perform the delete operation
-	result := repo.db.Executor.Model(&entity.Task{}).
-		Where("\"userId\" = ? AND \"taskId\" IN ?", userId, taskIDList).
-		Delete(&entity.Task{})
-
-	// Check for errors
-	if result.Error != nil {
-		return result.Error
-	}
-	return nil
-}
