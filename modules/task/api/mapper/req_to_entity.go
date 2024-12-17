@@ -67,6 +67,22 @@ func ConvertListIDRequestToListIDEntity(listID []string) []int {
 	return listIDEntity
 }
 
+func ConvertApplyAnalyzedTaskRequestToTaskApplyAnalyzedEntity(req req.ApplyAnalyzedTaskRequest) entity.TaskApplyAnalyzedTaskEntity {
+	var taskEntityList []*entity.Task
+	for _, task := range req.TaskList {
+		taskEntity := ConvertCreateTaskRequestToTaskEntity(task)
+		taskEntityList = append(taskEntityList, &taskEntity)
+	}
+
+	taskApplyAnalyzed := entity.TaskApplyAnalyzedTaskEntity{
+		TaskList:  taskEntityList,
+		StartTime: parseDueDate(req.StartTime),
+		EndTime:   parseDueDate(req.EndTime),
+	}
+	return taskApplyAnalyzed
+
+}
+
 func parseDueDate(dueDate string) time.Time {
 	parsedTime, _ := time.Parse(time.RFC3339, dueDate)
 	// Chuyển đổi sang múi giờ UTC+7 (Asia/Ho_Chi_Minh)

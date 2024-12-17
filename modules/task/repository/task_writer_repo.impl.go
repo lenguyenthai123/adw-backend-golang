@@ -5,6 +5,7 @@ import (
 	database "backend-golang/pkgs/dbs/postgres"
 	"context"
 	"log/slog"
+	"time"
 )
 
 type taskWriterRepositoryImpl struct {
@@ -22,6 +23,10 @@ func NewTaskWriterRepository(db database.Database) TaskWriterRepository {
 func (repo taskWriterRepositoryImpl) InsertTask(_ context.Context, taskEntity entity.Task) error {
 	return repo.db.Executor.
 		Create(&taskEntity).Error
+}
+func (repo taskWriterRepositoryImpl) InsertTaskList(ctx context.Context, taskEntityList []*entity.Task) error {
+	return repo.db.Executor.
+		Create(&taskEntityList).Error
 }
 
 func (repo taskWriterRepositoryImpl) DeleteTask(_ context.Context, userId int, taskID string) error {
@@ -64,6 +69,22 @@ func (repo taskWriterRepositoryImpl) UpdateTaskList(ctx context.Context, userID 
 		if err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+func (repo taskWriterRepositoryImpl) DeleteTaskInRangeTime(ctx context.Context, userId int, startTime, endTime time.Time) error {
+	// Perform the delete operation
+	query := repo.db.Executor.WithContext(ctx).Model(&entity.Task{})
+	result := query.
+		Where("\"userId\" = ?", userId).
+		Where("((\"dueDate\" >= ? AND \"dueDate\" <= ?) OR (\"startDate\" >= ? AND \"startDate\" <= ?))",
+			startTime, endTime, startTime, endTime).
+		Delete(&entity.Task{})
+
+	// Check for errors
+	if result.Error != nil {
+		return result.Error
 	}
 	return nil
 }

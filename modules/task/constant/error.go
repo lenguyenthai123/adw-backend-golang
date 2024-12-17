@@ -66,3 +66,12 @@ func ErrrorTaskIDNotInteger(err error) *res.ErrorResponse {
 		"ERR_TASK_ID_NOT_INTEGER",
 	)
 }
+
+func ErrorNotAnyTaskToAnalyze(err error) *res.ErrorResponse {
+	return res.NewErrorResponse(
+		http.StatusBadRequest,
+		err,
+		"Not found any task to analyze",
+		"ERR_NOT_ANY_TASK_TO_ANALYZE",
+	)
+}

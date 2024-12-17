@@ -5,7 +5,6 @@ import (
 	res "backend-golang/core/response"
 	"backend-golang/modules/task/api/mapper"
 	"backend-golang/modules/task/api/model/req"
-	"backend-golang/modules/task/constant"
 	"backend-golang/pkgs/log"
 	"context"
 	"github.com/gin-gonic/gin"
@@ -25,19 +24,13 @@ func (h *TaskHandlerImpl) HandleApplyAnalyzedTask(c *gin.Context) {
 		panic(res.ErrInvalidRequest(err))
 	}
 
-	for _, task := range applyAnalyzedTaskRequest.TaskList {
-		if task.TaskID == "" {
-			panic(constant.ErrorMissingTaskIDWhenUpdate())
-		}
-	}
-
-	taskEntityList := mapper.ConvertUpdateTaskListToTaskEntityList(applyAnalyzedTaskRequest.TaskList)
+	entity := mapper.ConvertApplyAnalyzedTaskRequestToTaskApplyAnalyzedEntity(applyAnalyzedTaskRequest)
 
 	// Get user from context, require middleware
 	ctx := context.WithValue(c.Request.Context(), core.CurrentRequesterKeyStruct{},
 		c.MustGet(core.CurrentRequesterKeyString).(core.Requester))
 
-	err := h.applyAnalyzedTaskUsecase.ExecApplyAnalyzedTask(ctx, taskEntityList)
+	err := h.applyAnalyzedTaskUsecase.ExecApplyAnalyzedTask(ctx, entity)
 
 	if err != nil {
 		panic(err)
