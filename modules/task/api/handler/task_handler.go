@@ -12,6 +12,7 @@ type TaskHandler interface {
 	HandleGetTask(c *gin.Context)
 	HandleUpdateTask(c *gin.Context)
 	HandleDeleteTask(c *gin.Context)
+	HandleDeleteTaskList(c *gin.Context)
 	HandleGetTaskList(c *gin.Context)
 	HandleAnalyzeTask(c *gin.Context)
 	HandleApplyAnalyzedTask(c *gin.Context)
@@ -23,6 +24,7 @@ type TaskHandlerImpl struct {
 	getTaskUsecase           usecase.GetTaskUsecase
 	updateTaskUsecase        usecase.UpdateTaskUsecase
 	deleteTaskUsecase        usecase.DeleteTaskUsecase
+	deleteTaskListUsecase    usecase.DeleteTaskListUsecase
 	getTaskListUsecase       usecase.GetTaskListUsecase
 	analyzeTaskUsecase       usecase.AnalyzeTaskUsecase
 	applyAnalyzedTaskUsecase usecase.ApplyAnalyzedTaskUsecase
@@ -34,6 +36,7 @@ func NewTaskHandler(
 	getTaskUsecase usecase.GetTaskUsecase,
 	updateTaskUsecase usecase.UpdateTaskUsecase,
 	deleteTaskUsecase usecase.DeleteTaskUsecase,
+	deleteTaskListUsecase usecase.DeleteTaskListUsecase,
 	getTaskListUsecase usecase.GetTaskListUsecase,
 	analyzeTaskUsecase usecase.AnalyzeTaskUsecase,
 	applyAnalyzedTaskUsecase usecase.ApplyAnalyzedTaskUsecase,
@@ -45,6 +48,7 @@ func NewTaskHandler(
 		getTaskUsecase:           getTaskUsecase,
 		updateTaskUsecase:        updateTaskUsecase,
 		deleteTaskUsecase:        deleteTaskUsecase,
+		deleteTaskListUsecase:    deleteTaskListUsecase,
 		getTaskListUsecase:       getTaskListUsecase,
 		analyzeTaskUsecase:       analyzeTaskUsecase,
 		applyAnalyzedTaskUsecase: applyAnalyzedTaskUsecase,

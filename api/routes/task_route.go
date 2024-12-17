@@ -22,9 +22,11 @@ func NewTaskHandler(db *database.Database, openaiClient *openai.Client, requestV
 		usecase.NewGetTaskUsecase(taskRepoReader),
 		usecase.NewUpdateTaskUsecase(taskRepoReader, taskRepoWriter),
 		usecase.NewDeleteTaskUsecase(taskRepoWriter),
+		usecase.NewDeleteTaskListUsecase(taskRepoWriter),
 		usecase.NewGetTaskListUsecase(taskRepoReader),
 		usecase.NewAnalyzeTaskUsecase(taskRepoReader, openaiClient),
-		usecase.NewApplyAnalyzedTaskUsecase(taskRepoWriter))
+		usecase.NewApplyAnalyzedTaskUsecase(taskRepoWriter),
+	)
 }
 
 func (r *RouteHandler) taskRoute() route.GroupRoute {
@@ -59,6 +61,14 @@ func (r *RouteHandler) taskRoute() route.GroupRoute {
 				Path:    "/:task_id",
 				Method:  method.DELETE,
 				Handler: r.TaskHandler.HandleDeleteTask,
+				Middlewares: route.Middlewares(
+					middlewares.Authentication(),
+				),
+			},
+			{
+				Path:    "/task_list",
+				Method:  method.DELETE,
+				Handler: r.TaskHandler.HandleDeleteTaskList,
 				Middlewares: route.Middlewares(
 					middlewares.Authentication(),
 				),
