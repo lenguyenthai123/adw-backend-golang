@@ -3,6 +3,7 @@ package usecase
 import (
 	"backend-golang/core"
 	"backend-golang/modules/task/api/mapper"
+	"backend-golang/modules/task/constant"
 	"backend-golang/modules/task/domain/entity"
 	"backend-golang/pkgs/log"
 	utils "backend-golang/utils"
@@ -36,7 +37,10 @@ func (uc analyzeTaskUsecaseImpl) ExecAnalyzeTask(ctx context.Context, startTime,
 
 	userId := ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserID()
 	taskList, err := uc.readerRepo.FindTaskListByRangeTime(ctx, userId, startTime, endTime)
-
+	if len(taskList) == 0 {
+		return nil, constant.ErrorNotAnyTaskToAnalyze(err)
+	}
+	
 	taskOpenaiList := make([]entity.TaskOpenai, 0)
 	// Initialize min and max with the first element
 	minStartDate := taskList[0].StartDate

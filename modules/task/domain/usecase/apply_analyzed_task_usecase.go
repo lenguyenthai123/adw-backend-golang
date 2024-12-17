@@ -8,7 +8,7 @@ import (
 )
 
 type ApplyAnalyzedTaskUsecase interface {
-	ExecApplyAnalyzedTask(ctx context.Context, taskEntityList []*entity.Task) error
+	ExecApplyAnalyzedTask(ctx context.Context, taskEntityList entity.TaskApplyAnalyzedTaskEntity) error
 }
 
 type applyAnalyzedTaskUsecaseImpl struct {
@@ -24,14 +24,21 @@ func NewApplyAnalyzedTaskUsecase(
 	}
 }
 
-func (uc applyAnalyzedTaskUsecaseImpl) ExecApplyAnalyzedTask(ctx context.Context, taskEntityList []*entity.Task) error {
-	userId := ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserID()
-	if len(taskEntityList) == 0 {
+func (uc applyAnalyzedTaskUsecaseImpl) ExecApplyAnalyzedTask(ctx context.Context, taskEntityList entity.TaskApplyAnalyzedTaskEntity) error {
+	userId := ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserIDInt()
+
+	if len(taskEntityList.TaskList) == 0 {
 		return nil
 	}
-	err := uc.writerRepo.UpdateTaskList(ctx, userId, taskEntityList)
+
+	err := uc.writerRepo.DeleteTaskInRangeTime(ctx, userId, taskEntityList.StartTime, taskEntityList.EndTime)
 	if err != nil {
 		return constant.ErrrorUpdateTaskListFailed(err)
 	}
+	for _, task := range taskEntityList.TaskList {
+		task.UserID = userId
+	}
+	err = uc.writerRepo.InsertTaskList(ctx, taskEntityList.TaskList)
+
 	return nil
 }
