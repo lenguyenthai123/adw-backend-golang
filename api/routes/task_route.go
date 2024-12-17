@@ -8,6 +8,7 @@ import (
 	database "backend-golang/pkgs/dbs/postgres"
 	"backend-golang/pkgs/transport/http/method"
 	"backend-golang/pkgs/transport/http/route"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/openai/openai-go"
 )
@@ -22,6 +23,7 @@ func NewTaskHandler(db *database.Database, openaiClient *openai.Client, requestV
 		usecase.NewGetTaskUsecase(taskRepoReader),
 		usecase.NewUpdateTaskUsecase(taskRepoReader, taskRepoWriter),
 		usecase.NewDeleteTaskUsecase(taskRepoWriter),
+		usecase.NewDeleteTaskListUsecase(taskRepoWriter),
 		usecase.NewGetTaskListUsecase(taskRepoReader),
 		usecase.NewAnalyzeTaskUsecase(taskRepoReader, openaiClient),
 		usecase.NewApplyAnalyzedTaskUsecase(taskRepoWriter))
@@ -59,6 +61,14 @@ func (r *RouteHandler) taskRoute() route.GroupRoute {
 				Path:    "/:task_id",
 				Method:  method.DELETE,
 				Handler: r.TaskHandler.HandleDeleteTask,
+				Middlewares: route.Middlewares(
+					middlewares.Authentication(),
+				),
+			},
+			{
+				Path:    "/",
+				Method:  method.DELETE,
+				Handler: r.TaskHandler.HandleDeleteTaskList,
 				Middlewares: route.Middlewares(
 					middlewares.Authentication(),
 				),

@@ -17,4 +17,5 @@ type TaskWriterRepository interface {
 	UpdateTask(ctx context.Context, taskEntity entity.Task) error
 	UpdateTaskList(ctx context.Context, userID string, taskEntityList []*entity.Task) error
 	DeleteTask(ctx context.Context, userId int, taskID string) error
+	DeleteTaskList(_ context.Context, userId int, taskIDs []string) error
 }

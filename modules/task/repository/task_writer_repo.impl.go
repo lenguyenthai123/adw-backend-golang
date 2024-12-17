@@ -31,6 +31,13 @@ func (repo taskWriterRepositoryImpl) DeleteTask(_ context.Context, userId int, t
 		Delete(&entity.Task{}).Error
 }
 
+func (repo taskWriterRepositoryImpl) DeleteTaskList(_ context.Context, userId int, taskIDs []string) error {
+	return repo.db.Executor.
+		Where("\"taskId\" IN (?)", taskIDs).
+		Where("\"userId\" = ?", userId).
+		Delete(&entity.Task{}).Error
+}
+
 func (repo taskWriterRepositoryImpl) UpdateTask(_ context.Context, taskEntity entity.Task) error {
 	return repo.db.Executor.
 		Model(&entity.Task{}).

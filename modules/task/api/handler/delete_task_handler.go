@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,6 +35,35 @@ func (h *TaskHandlerImpl) HandleDeleteTask(c *gin.Context) {
 		c.MustGet(core.CurrentRequesterKeyString).(core.Requester))
 
 	err := h.deleteTaskUsecase.ExecDeleteTask(ctx, taskID)
+
+	if err != nil {
+		panic(err)
+	}
+
+	res.ResponseSuccess(c, res.NewSuccessResponse(http.StatusOK, "success", nil))
+}
+
+func (h *TaskHandlerImpl) HandleDeleteTaskList(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
+	// Get task IDs from query parameter
+	taskIDsQuery := c.Query("task_ids")
+	if taskIDsQuery == "" {
+		panic(res.ErrInvalidRequest(errors.New("task_ids is required")))
+	}
+
+	taskIDs := strings.Split(taskIDsQuery, ",")
+
+	// Validate if at least one task ID is provided
+	if len(taskIDs) == 0 {
+		panic(res.ErrInvalidRequest(errors.New("no task IDs provided")))
+	}
+
+	// Get user from context, require middleware
+	ctx := context.WithValue(c.Request.Context(), core.CurrentRequesterKeyStruct{},
+		c.MustGet(core.CurrentRequesterKeyString).(core.Requester))
+
+	err := h.deleteTaskListUsecase.ExecDeleteTaskList(ctx, taskIDs)
 
 	if err != nil {
 		panic(err)
