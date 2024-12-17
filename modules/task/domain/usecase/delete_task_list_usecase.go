@@ -7,7 +7,7 @@ import (
 )
 
 type DeleteTaskListUsecase interface {
-	ExecDeleteTaskList(ctx context.Context, taskIDList []int) error
+	ExecDeleteTaskList(ctx context.Context, taskIDs []string) error
 }
 
 type deleteTaskListUsecaseImpl struct {
@@ -22,11 +22,11 @@ func NewDeleteTaskListUsecase(writerRepo TaskWriterRepository) DeleteTaskListUse
 	}
 }
 
-func (uc deleteTaskListUsecaseImpl) ExecDeleteTaskList(ctx context.Context, taskIDList []int) error {
-	userId := ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserID()
-	err := uc.writerRepo.DeleteTaskList(ctx, userId, taskIDList)
+func (uc deleteTaskListUsecaseImpl) ExecDeleteTaskList(ctx context.Context, taskIDs []string) error {
+	userId := ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserIDInt()
+	err := uc.writerRepo.DeleteTaskList(ctx, userId, taskIDs)
 	if err != nil {
-		return constant.ErrrorDeleteTaskListFailed(err)
+		return constant.ErrorNotFoundTask(err)
 	}
 
 	return nil
