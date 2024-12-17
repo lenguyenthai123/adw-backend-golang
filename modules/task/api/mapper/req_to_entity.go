@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"backend-golang/modules/task/api/model/req"
+	"backend-golang/modules/task/constant"
 
 	"backend-golang/modules/task/domain/entity"
 	"strconv"
@@ -52,6 +53,18 @@ func ConvertUpdateTaskListToTaskEntityList(updateTaskList []req.UpdateTaskReques
 		taskEntityList = append(taskEntityList, &taskEntity)
 	}
 	return taskEntityList
+}
+
+func ConvertListIDRequestToListIDEntity(listID []string) []int {
+	var listIDEntity []int
+	for _, id := range listID {
+		intID, err := strconv.Atoi(id)
+		if err != nil {
+			panic(constant.ErrrorTaskIDNotInteger(err))
+		}
+		listIDEntity = append(listIDEntity, intID)
+	}
+	return listIDEntity
 }
 
 func parseDueDate(dueDate string) time.Time {

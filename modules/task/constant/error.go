@@ -49,3 +49,20 @@ func ErrrorUpdateTaskListFailed(err error) *res.ErrorResponse {
 		"ERR_UPDATE_TASK_LIST_FAILED",
 	)
 }
+
+func ErrrorDeleteTaskListFailed(err error) *res.ErrorResponse {
+	return res.NewErrorResponse(
+		http.StatusInternalServerError,
+		err,
+		"Delete task list failed",
+		"ERR_DELETE_TASK_LIST_FAILED",
+	)
+}
+func ErrrorTaskIDNotInteger(err error) *res.ErrorResponse {
+	return res.NewErrorResponse(
+		http.StatusInternalServerError,
+		err,
+		"Task ID must be integer",
+		"ERR_TASK_ID_NOT_INTEGER",
+	)
+}
