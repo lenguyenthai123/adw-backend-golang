@@ -17,6 +17,7 @@ func NewTaskHandler(db *database.Database, openaiClient *openai.Client, requestV
 	// Task Repository
 	taskRepoReader := repository.NewTaskReaderRepository(*db)
 	taskRepoWriter := repository.NewTaskWriterRepository(*db)
+	taskProgressRepoWriter := repository.NewTaskProgressWriterRepository(*db)
 
 	return taskHandler.NewTaskHandler(requestValidator,
 		usecase.NewCreateTaskUsecase(taskRepoWriter),
@@ -27,6 +28,7 @@ func NewTaskHandler(db *database.Database, openaiClient *openai.Client, requestV
 		usecase.NewGetTaskListUsecase(taskRepoReader),
 		usecase.NewAnalyzeTaskUsecase(taskRepoReader, openaiClient),
 		usecase.NewApplyAnalyzedTaskUsecase(taskRepoWriter),
+		usecase.NewUpdateTaskProgressTimeUsecase(taskRepoReader, taskProgressRepoWriter),
 	)
 }
 
@@ -62,6 +64,14 @@ func (r *RouteHandler) taskRoute() route.GroupRoute {
 				Path:    "/:task_id",
 				Method:  method.DELETE,
 				Handler: r.TaskHandler.HandleDeleteTask,
+				Middlewares: route.Middlewares(
+					middlewares.Authentication(),
+				),
+			},
+			{
+				Path:    "/progress_time/:task_id",
+				Method:  method.PATCH,
+				Handler: r.TaskHandler.HandleUpdateTaskProgressTime,
 				Middlewares: route.Middlewares(
 					middlewares.Authentication(),
 				),
