@@ -10,5 +10,5 @@ type TaskProgressReaderRepository interface {
 }
 
 type TaskProgressWriterRepository interface {
-	InsertTaskProgressHistory(ctx context.Context, taskProgressEntity entity.TaskProgress) error
+	InsertTaskProgressListHistory(ctx context.Context, taskProgressEntityList []*entity.TaskProgress) error
 }

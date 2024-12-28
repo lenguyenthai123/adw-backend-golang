@@ -18,7 +18,7 @@ func NewTaskProgressWriterRepository(db database.Database) TaskProgressWriterRep
 	}
 }
 
-func (repo taskProgressWriterRepositoryImpl) InsertTaskProgressHistory(ctx context.Context, taskProgressEntity entity.TaskProgress) error {
+func (repo taskProgressWriterRepositoryImpl) InsertTaskProgressListHistory(ctx context.Context, taskProgressEntityList []*entity.TaskProgress) error {
 	return repo.db.Executor.
-		Create(&taskProgressEntity).Error
+		Create(&taskProgressEntityList).Error
 }
