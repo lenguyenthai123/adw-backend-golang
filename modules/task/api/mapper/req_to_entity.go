@@ -99,6 +99,15 @@ func ConvertUpdateTaskProgressRequestToTaskEntity(req req.UpdateTaskProgressRequ
 	return task
 }
 
+func ConvertUpdateTaskProgressListRequestToTaskEntityList(updateTaskProgressList req.UpdateTaskProgressListRequest, taskId string) []*entity.TaskProgress {
+	var taskEntityList []*entity.TaskProgress
+	for _, updateTaskProgress := range updateTaskProgressList.TaskProgressList {
+		taskEntity := ConvertUpdateTaskProgressRequestToTaskEntity(*updateTaskProgress, taskId)
+		taskEntityList = append(taskEntityList, &taskEntity)
+	}
+	return taskEntityList
+}
+
 func parseDueDate(dueDate string) time.Time {
 	parsedTime, _ := time.Parse(time.RFC3339, dueDate)
 	// Chuyển đổi sang múi giờ UTC+7 (Asia/Ho_Chi_Minh)
