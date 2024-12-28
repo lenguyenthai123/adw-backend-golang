@@ -10,6 +10,10 @@ type UpdateTaskProgressRequest struct {
 	SessionEnd   string `json:"sessionEnd" binding:"required"`
 }
 
+type UpdateTaskProgressListRequest struct {
+	TaskProgressList []*UpdateTaskProgressRequest `json:"taskProgressList" binding:"required"`
+}
+
 func (r *UpdateTaskProgressRequest) Validate() error {
 	// Parse the sessionStart and sessionEnd strings into time.Time objects
 	layout := time.RFC3339 // Use RFC3339 format for time parsing
@@ -28,5 +32,15 @@ func (r *UpdateTaskProgressRequest) Validate() error {
 		return fmt.Errorf("sessionEnd must be after sessionStart")
 	}
 
+	return nil
+}
+
+// Validate validates the UpdateTaskProgressListRequest
+func (r *UpdateTaskProgressListRequest) Validate() error {
+	for _, taskProgress := range r.TaskProgressList {
+		if err := taskProgress.Validate(); err != nil {
+			return err
+		}
+	}
 	return nil
 }
