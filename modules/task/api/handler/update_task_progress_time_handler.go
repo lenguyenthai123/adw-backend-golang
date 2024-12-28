@@ -34,8 +34,8 @@ func (h *TaskHandlerImpl) HandleUpdateTaskProgressTime(c *gin.Context) {
 	}
 
 	// Bind request
-	var updateTaskProgressRequest req.UpdateTaskProgressRequest
-	if err := c.ShouldBind(&updateTaskProgressRequest); err != nil {
+	var updateTaskProgressListRequest req.UpdateTaskProgressListRequest
+	if err := c.ShouldBind(&updateTaskProgressListRequest); err != nil {
 		log.JsonLogger.Error("HandleUpdateTaskProgress.bind_json",
 			slog.String("error", err.Error()),
 			slog.String("request_id", c.Request.Context().Value("X-Request-ID").(string)),
@@ -45,7 +45,7 @@ func (h *TaskHandlerImpl) HandleUpdateTaskProgressTime(c *gin.Context) {
 	}
 
 	// Validate request
-	if err := updateTaskProgressRequest.Validate(); err != nil {
+	if err := updateTaskProgressListRequest.Validate(); err != nil {
 		panic(res.ErrInvalidRequest(err))
 	}
 
@@ -54,9 +54,9 @@ func (h *TaskHandlerImpl) HandleUpdateTaskProgressTime(c *gin.Context) {
 		c.MustGet(core.CurrentRequesterKeyString).(core.Requester))
 
 	// Update task
-	if err := h.updateTaskProgressTimeUsecase.ExecUpdateTaskProgress(
+	if err := h.updateTaskProgressTimeUsecase.ExecUpdateTaskProgressList(
 		ctx,
-		mapper.ConvertUpdateTaskProgressRequestToTaskEntity(updateTaskProgressRequest, taskID),
+		mapper.ConvertUpdateTaskProgressListRequestToTaskEntityList(updateTaskProgressListRequest, taskID),
 	); err != nil {
 		panic(err)
 	}
