@@ -83,6 +83,22 @@ func ConvertApplyAnalyzedTaskRequestToTaskApplyAnalyzedEntity(req req.ApplyAnaly
 
 }
 
+func ConvertUpdateTaskProgressRequestToTaskEntity(req req.UpdateTaskProgressRequest, taskId string) entity.TaskProgress {
+	id, err := strconv.Atoi(taskId)
+	if err != nil {
+		panic(err)
+	}
+
+	// Map the request data to the Task entity
+	task := entity.TaskProgress{
+		TaskID:       id,
+		SessionStart: parseDueDate(req.SessionStart),
+		SessionEnd:   parseDueDate(req.SessionEnd),
+	}
+
+	return task
+}
+
 func parseDueDate(dueDate string) time.Time {
 	parsedTime, _ := time.Parse(time.RFC3339, dueDate)
 	// Chuyển đổi sang múi giờ UTC+7 (Asia/Ho_Chi_Minh)
