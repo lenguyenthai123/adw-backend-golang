@@ -8,7 +8,7 @@ import (
 )
 
 type UpdateTaskProgressTimeUsecase interface {
-	ExecUpdateTaskProgress(ctx context.Context, taskProgressEntity entity.TaskProgress) error
+	ExecUpdateTaskProgressList(ctx context.Context, taskProgressEntityList []*entity.TaskProgress) error
 }
 
 type updateTaskProgressTimeUsecaseImpl struct {
@@ -25,18 +25,24 @@ func NewUpdateTaskProgressTimeUsecase(taskReaderRepo TaskReaderRepository, taskP
 	}
 }
 
-func (uc updateTaskProgressTimeUsecaseImpl) ExecUpdateTaskProgress(ctx context.Context, taskProgressEntity entity.TaskProgress) error {
+func (uc updateTaskProgressTimeUsecaseImpl) ExecUpdateTaskProgressList(ctx context.Context, taskProgressEntityList []*entity.TaskProgress) error {
 	userId := ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserIDInt()
+	var taskId int
+	if len(taskProgressEntityList) == 0 {
+		return constant.ErrorNotFoundTask(nil)
+	} else {
+		taskId = taskProgressEntityList[0].TaskID
+	}
 
 	foundedTask, err := uc.taskReaderRepo.FindTaskByCondition(ctx, map[string]interface{}{
-		"taskId": taskProgressEntity.TaskID,
+		"taskId": taskId,
 		"userId": userId,
 	})
 	if foundedTask == nil {
 		return constant.ErrorNotFoundTask(err)
 	}
 
-	err1 := uc.taskWriterRepo.InsertTaskProgressHistory(ctx, taskProgressEntity)
+	err1 := uc.taskWriterRepo.InsertTaskProgressListHistory(ctx, taskProgressEntityList)
 	if err1 != nil {
 		return constant.ErrorNotFoundTask(err1)
 	}
