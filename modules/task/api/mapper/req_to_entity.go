@@ -83,7 +83,7 @@ func ConvertApplyAnalyzedTaskRequestToTaskApplyAnalyzedEntity(req req.ApplyAnaly
 
 }
 
-func ConvertUpdateTaskProgressRequestToTaskEntity(req req.UpdateTaskProgressRequest, taskId string) entity.TaskProgress {
+func ConvertUpdateTaskProgressRequestToTaskEntity(req req.UpdateTaskProgressRequest, taskId string, userId int) entity.TaskProgress {
 	id, err := strconv.Atoi(taskId)
 	if err != nil {
 		panic(err)
@@ -92,6 +92,7 @@ func ConvertUpdateTaskProgressRequestToTaskEntity(req req.UpdateTaskProgressRequ
 	// Map the request data to the Task entity
 	task := entity.TaskProgress{
 		TaskID:       id,
+		UserID:       userId,
 		SessionStart: parseDueDate(req.SessionStart),
 		SessionEnd:   parseDueDate(req.SessionEnd),
 	}
@@ -99,10 +100,10 @@ func ConvertUpdateTaskProgressRequestToTaskEntity(req req.UpdateTaskProgressRequ
 	return task
 }
 
-func ConvertUpdateTaskProgressListRequestToTaskEntityList(updateTaskProgressList req.UpdateTaskProgressListRequest, taskId string) []*entity.TaskProgress {
+func ConvertUpdateTaskProgressListRequestToTaskEntityList(updateTaskProgressList req.UpdateTaskProgressListRequest, taskId string, userId int) []*entity.TaskProgress {
 	var taskEntityList []*entity.TaskProgress
 	for _, updateTaskProgress := range updateTaskProgressList.TaskProgressList {
-		taskEntity := ConvertUpdateTaskProgressRequestToTaskEntity(*updateTaskProgress, taskId)
+		taskEntity := ConvertUpdateTaskProgressRequestToTaskEntity(*updateTaskProgress, taskId, userId)
 		taskEntityList = append(taskEntityList, &taskEntity)
 	}
 	return taskEntityList
