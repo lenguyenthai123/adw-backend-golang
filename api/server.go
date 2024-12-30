@@ -7,8 +7,9 @@ import (
 	"backend-golang/pkgs/dbs/postgres"
 	"backend-golang/pkgs/transport/http/server"
 	"backend-golang/utils"
-	"github.com/openai/openai-go"
 	"time"
+
+	"github.com/openai/openai-go"
 )
 
 func NewServer() (*server.HTTPServer, error) {
@@ -41,8 +42,9 @@ func NewServer() (*server.HTTPServer, error) {
 	requestValidator := utils.NewValidator()
 
 	srv := &routes.RouteHandler{
-		UserHandler: routes.NewUserHandler(db, requestValidator),
-		TaskHandler: routes.NewTaskHandler(db, openaiClient, requestValidator),
+		UserHandler:      routes.NewUserHandler(db, requestValidator),
+		TaskHandler:      routes.NewTaskHandler(db, openaiClient, requestValidator),
+		AnalyticsHandler: routes.NewAnalyticsHandler(db, openaiClient, requestValidator),
 	}
 	s.AddGroupRoutes(srv.InitGroupRoutes())
 
