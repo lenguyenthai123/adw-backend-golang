@@ -53,10 +53,12 @@ func (h *TaskHandlerImpl) HandleUpdateTaskProgressTime(c *gin.Context) {
 	ctx := context.WithValue(c.Request.Context(), core.CurrentRequesterKeyStruct{},
 		c.MustGet(core.CurrentRequesterKeyString).(core.Requester))
 
+	userId := ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserIDInt()
+
 	// Update task
 	if err := h.updateTaskProgressTimeUsecase.ExecUpdateTaskProgressList(
 		ctx,
-		mapper.ConvertUpdateTaskProgressListRequestToTaskEntityList(updateTaskProgressListRequest, taskID),
+		mapper.ConvertUpdateTaskProgressListRequestToTaskEntityList(updateTaskProgressListRequest, taskID, userId),
 	); err != nil {
 		panic(err)
 	}
