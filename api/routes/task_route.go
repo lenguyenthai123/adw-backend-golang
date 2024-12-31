@@ -106,6 +106,7 @@ func (r *RouteHandler) taskRoute() route.GroupRoute {
 				Handler: r.TaskHandler.HandleAnalyzeTask,
 				Middlewares: route.Middlewares(
 					middlewares.Authentication(),
+					middlewares.UserVipMiddleware(),
 				),
 			},
 			{
@@ -114,6 +115,7 @@ func (r *RouteHandler) taskRoute() route.GroupRoute {
 				Handler: r.TaskHandler.HandleApplyAnalyzedTask,
 				Middlewares: route.Middlewares(
 					middlewares.Authentication(),
+					middlewares.UserVipMiddleware(),
 				),
 			},
 		},
