@@ -5,6 +5,7 @@ import (
 	"backend-golang/modules/task/constant"
 	"backend-golang/modules/task/domain/entity"
 	"context"
+	"time"
 )
 
 type GetTaskListUsecase interface {
@@ -13,13 +14,17 @@ type GetTaskListUsecase interface {
 
 type getTaskListUsecaseImpl struct {
 	taskReaderRepository TaskReaderRepository
+	taskWriterRepository TaskWriterRepository
 }
 
 var _ GetTaskListUsecase = (*getTaskListUsecaseImpl)(nil)
 
-func NewGetTaskListUsecase(taskReaderRepository TaskReaderRepository) GetTaskListUsecase {
+func NewGetTaskListUsecase(
+	taskReaderRepository TaskReaderRepository,
+	taskWriterRepository TaskWriterRepository) GetTaskListUsecase {
 	return &getTaskListUsecaseImpl{
 		taskReaderRepository: taskReaderRepository,
+		taskWriterRepository: taskWriterRepository,
 	}
 }
 
@@ -53,6 +58,18 @@ func (uc getTaskListUsecaseImpl) ExecGetTaskList(ctx context.Context, searchFilt
 	tasks, err := uc.taskReaderRepository.FindTaskListByCondition(ctx, conditions)
 	if err != nil {
 		return nil, constant.ErrorNotFoundTaskList(err)
+	}
+
+	//Update all task over due date
+	for _, task := range tasks {
+		if task.DueDate.After(time.Now()) {
+			task.Status = "Expired"
+			// Update task status
+			err1 := uc.taskWriterRepository.UpdateTask(ctx, *task)
+			if err1 != nil {
+				return nil, constant.ErrorSystem(err1)
+			}
+		}
 	}
 
 	return tasks, nil

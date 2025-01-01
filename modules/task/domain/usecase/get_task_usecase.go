@@ -5,6 +5,8 @@ import (
 	"backend-golang/modules/task/constant"
 	"backend-golang/modules/task/domain/entity"
 	"context"
+	"fmt"
+	"time"
 )
 
 type GetTaskUsecase interface {
@@ -13,13 +15,18 @@ type GetTaskUsecase interface {
 
 type getTaskUsecaseImpl struct {
 	taskReaderRepository TaskReaderRepository
+	taskWriterRepository TaskWriterRepository
 }
 
 var _ GetTaskUsecase = (*getTaskUsecaseImpl)(nil)
 
-func NewGetTaskUsecase(taskReaderRepository TaskReaderRepository) GetTaskUsecase {
+func NewGetTaskUsecase(
+	taskReaderRepository TaskReaderRepository,
+	taskWriterRepository TaskWriterRepository,
+) GetTaskUsecase {
 	return &getTaskUsecaseImpl{
 		taskReaderRepository: taskReaderRepository,
+		taskWriterRepository: taskWriterRepository,
 	}
 }
 
@@ -31,6 +38,17 @@ func (uc getTaskUsecaseImpl) ExecGetTask(ctx context.Context, taskID string) (*e
 	})
 	if err != nil {
 		return nil, constant.ErrorNotFoundTask(err)
+	}
+
+	// Check taskEntity dueTime over current time with timezone
+	fmt.Println(time.Now())
+	if taskEntity.DueDate.After(time.Now()) {
+		taskEntity.Status = "Expired"
+		// Update task status
+		err1 := uc.taskWriterRepository.UpdateTask(ctx, *taskEntity)
+		if err1 != nil {
+			return nil, constant.ErrorNotFoundTask(err1)
+		}
 	}
 
 	return taskEntity, nil

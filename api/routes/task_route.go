@@ -21,11 +21,11 @@ func NewTaskHandler(db *database.Database, openaiClient *openai.Client, requestV
 
 	return taskHandler.NewTaskHandler(requestValidator,
 		usecase.NewCreateTaskUsecase(taskRepoWriter),
-		usecase.NewGetTaskUsecase(taskRepoReader),
+		usecase.NewGetTaskUsecase(taskRepoReader, taskRepoWriter),
 		usecase.NewUpdateTaskUsecase(taskRepoReader, taskRepoWriter),
 		usecase.NewDeleteTaskUsecase(taskRepoWriter),
 		usecase.NewDeleteTaskListUsecase(taskRepoWriter),
-		usecase.NewGetTaskListUsecase(taskRepoReader),
+		usecase.NewGetTaskListUsecase(taskRepoReader, taskRepoWriter),
 		usecase.NewAnalyzeTaskUsecase(taskRepoReader, openaiClient),
 		usecase.NewApplyAnalyzedTaskUsecase(taskRepoWriter),
 		usecase.NewUpdateTaskProgressTimeUsecase(taskRepoReader, taskProgressRepoWriter),

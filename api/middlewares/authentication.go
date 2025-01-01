@@ -73,7 +73,7 @@ func UserVipMiddleware() gin.HandlerFunc {
 
 		jwtClaims, ok := claims.(jwt.MapClaims)
 		if !ok || !isUserVip(jwtClaims) {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "User is not vip"})
+			c.JSON(http.StatusForbidden, gin.H{"error": "User is not vip"})
 			c.Abort()
 			return
 		}
