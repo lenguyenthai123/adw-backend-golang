@@ -3,6 +3,7 @@ package usecase
 import (
 	"backend-golang/core"
 	"backend-golang/modules/analytics/domain/entity"
+	"backend-golang/modules/task/constant"
 	"context"
 )
 
@@ -11,17 +12,23 @@ type GetTimeSpentDailyUsecase interface {
 }
 
 type getTimeSpentDailyUsecaseImpl struct {
-	TimeProgressReaderRepo TimeProgressReaderRepo
+	timeProgressReaderRepo TimeProgressReaderRepo
 }
 
 var _ GetTimeSpentDailyUsecase = (*getTimeSpentDailyUsecaseImpl)(nil)
 
 func NewGetTimeSpentDailyUsecase(timeProgressReaderRepo TimeProgressReaderRepo) GetTimeSpentDailyUsecase {
 	return &getTimeSpentDailyUsecaseImpl{
-		TimeProgressReaderRepo: timeProgressReaderRepo,
+		timeProgressReaderRepo: timeProgressReaderRepo,
 	}
 }
 
 func (uc getTimeSpentDailyUsecaseImpl) Execute(ctx context.Context, startTime string, endTime string) (*[]entity.DailyProgressEntity, error) {
-	return uc.TimeProgressReaderRepo.GetTimeSpentDaily(ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserIDInt(), startTime, endTime)
+	userId := ctx.Value(core.CurrentRequesterKeyStruct{}).(core.Requester).GetUserIDInt()
+	timeSpentDaily, err := uc.timeProgressReaderRepo.GetTimeSpentDaily(userId, startTime, endTime)
+	if err != nil {
+		return nil, constant.ErrorNotFoundTask(err)
+	}
+
+	return timeSpentDaily, nil
 }

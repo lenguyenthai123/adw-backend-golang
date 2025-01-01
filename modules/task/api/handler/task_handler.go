@@ -17,19 +17,21 @@ type TaskHandler interface {
 	HandleAnalyzeTask(c *gin.Context)
 	HandleApplyAnalyzedTask(c *gin.Context)
 	HandleUpdateTaskProgressTime(c *gin.Context)
+	HandleGetTaskNumberEachStatus(c *gin.Context)
 }
 
 type TaskHandlerImpl struct {
-	requestValidator              *validator.Validate
-	createTaskUsecase             usecase.CreateTaskUsecase
-	getTaskUsecase                usecase.GetTaskUsecase
-	updateTaskUsecase             usecase.UpdateTaskUsecase
-	deleteTaskUsecase             usecase.DeleteTaskUsecase
-	deleteTaskListUsecase         usecase.DeleteTaskListUsecase
-	getTaskListUsecase            usecase.GetTaskListUsecase
-	analyzeTaskUsecase            usecase.AnalyzeTaskUsecase
-	applyAnalyzedTaskUsecase      usecase.ApplyAnalyzedTaskUsecase
-	updateTaskProgressTimeUsecase usecase.UpdateTaskProgressTimeUsecase
+	requestValidator               *validator.Validate
+	createTaskUsecase              usecase.CreateTaskUsecase
+	getTaskUsecase                 usecase.GetTaskUsecase
+	updateTaskUsecase              usecase.UpdateTaskUsecase
+	deleteTaskUsecase              usecase.DeleteTaskUsecase
+	deleteTaskListUsecase          usecase.DeleteTaskListUsecase
+	getTaskListUsecase             usecase.GetTaskListUsecase
+	analyzeTaskUsecase             usecase.AnalyzeTaskUsecase
+	applyAnalyzedTaskUsecase       usecase.ApplyAnalyzedTaskUsecase
+	updateTaskProgressTimeUsecase  usecase.UpdateTaskProgressTimeUsecase
+	getTaskNumberEachStatusUsecase usecase.GetTaskNumberEachStatusUsecase
 }
 
 func NewTaskHandler(
@@ -43,17 +45,19 @@ func NewTaskHandler(
 	analyzeTaskUsecase usecase.AnalyzeTaskUsecase,
 	applyAnalyzedTaskUsecase usecase.ApplyAnalyzedTaskUsecase,
 	updateTaskProgressTimeUsecase usecase.UpdateTaskProgressTimeUsecase,
+	getTaskNumberEachStatusUsecase usecase.GetTaskNumberEachStatusUsecase,
 ) TaskHandler {
 	return &TaskHandlerImpl{
-		requestValidator:              requestValidator,
-		createTaskUsecase:             createTaskUsecase,
-		getTaskUsecase:                getTaskUsecase,
-		updateTaskUsecase:             updateTaskUsecase,
-		deleteTaskUsecase:             deleteTaskUsecase,
-		deleteTaskListUsecase:         deleteTaskListUsecase,
-		getTaskListUsecase:            getTaskListUsecase,
-		analyzeTaskUsecase:            analyzeTaskUsecase,
-		applyAnalyzedTaskUsecase:      applyAnalyzedTaskUsecase,
-		updateTaskProgressTimeUsecase: updateTaskProgressTimeUsecase,
+		requestValidator:               requestValidator,
+		createTaskUsecase:              createTaskUsecase,
+		getTaskUsecase:                 getTaskUsecase,
+		updateTaskUsecase:              updateTaskUsecase,
+		deleteTaskUsecase:              deleteTaskUsecase,
+		deleteTaskListUsecase:          deleteTaskListUsecase,
+		getTaskListUsecase:             getTaskListUsecase,
+		analyzeTaskUsecase:             analyzeTaskUsecase,
+		applyAnalyzedTaskUsecase:       applyAnalyzedTaskUsecase,
+		updateTaskProgressTimeUsecase:  updateTaskProgressTimeUsecase,
+		getTaskNumberEachStatusUsecase: getTaskNumberEachStatusUsecase,
 	}
 }

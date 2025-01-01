@@ -95,3 +95,27 @@ func (repo taskReaderRepositoryImpl) FindTaskListByRangeTime(ctx context.Context
 
 	return taskList, nil
 }
+
+func (repo taskReaderRepositoryImpl) GetTotalTasksOfEachStatus(ctx context.Context, userId int) (map[string]int, error) {
+	var taskStatusCount []struct {
+		Status string
+		Count  int
+	}
+	query := repo.db.Executor.WithContext(ctx).Model(&entity.Task{})
+
+	err := query.
+		Select("status, COUNT(*) as count").
+		Where("\"userId\" = ?", userId).
+		Group("status").
+		Find(&taskStatusCount).Error
+	if err != nil {
+		return nil, err
+	}
+
+	taskStatusMap := make(map[string]int)
+	for _, taskStatus := range taskStatusCount {
+		taskStatusMap[taskStatus.Status] = taskStatus.Count
+	}
+
+	return taskStatusMap, nil
+}

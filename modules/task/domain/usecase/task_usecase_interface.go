@@ -11,6 +11,7 @@ type TaskReaderRepository interface {
 	FindTaskListByCondition(ctx context.Context, conditions map[string]interface{}) ([]*entity.Task, error)
 	// Version 2
 	FindTaskListByRangeTime(ctx context.Context, userId, startTime, endTime string) ([]*entity.Task, error)
+	GetTotalTasksOfEachStatus(ctx context.Context, userId int) (map[string]int, error)
 }
 
 type TaskWriterRepository interface {

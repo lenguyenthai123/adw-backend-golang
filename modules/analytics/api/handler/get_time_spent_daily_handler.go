@@ -2,6 +2,7 @@ package handler
 
 import (
 	"backend-golang/core"
+	res "backend-golang/core/response"
 	"backend-golang/modules/analytics/api/model/req"
 	"context"
 	"net/http"
@@ -10,10 +11,11 @@ import (
 )
 
 func (handler *AnalyticsHandlerImpl) HandleGetTimeSpentDaily(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
 	var getUserProgressRequest req.GetAnalyticsRequest
 	if err := c.ShouldBindJSON(&getUserProgressRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(res.ErrInvalidRequest(err))
 	}
 
 	// Get user from context, require middleware
@@ -22,9 +24,8 @@ func (handler *AnalyticsHandlerImpl) HandleGetTimeSpentDaily(c *gin.Context) {
 
 	getUserProgressResponse, err := handler.getTimeSpentDailyUsecase.Execute(ctx, getUserProgressRequest.StartTime, getUserProgressRequest.EndTime)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		panic(err)
 	}
 
-	c.JSON(http.StatusOK, getUserProgressResponse)
+	res.ResponseSuccess(c, res.NewSuccessResponse(http.StatusOK, "success", getUserProgressResponse))
 }

@@ -1,24 +1,23 @@
 package handler
 
 import (
-	"backend-golang/modules/analytics/api/model/req"
+	"backend-golang/core"
+	res "backend-golang/core/response"
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (handler *AnalyticsHandlerImpl) HandleGetUserProgress(c *gin.Context) {
-	var getUserProgressRequest req.GetAnalyticsRequest
-	if err := c.ShouldBindJSON(&getUserProgressRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	// Get user from context, require middleware
+	ctx := context.WithValue(c.Request.Context(), core.CurrentRequesterKeyStruct{},
+		c.MustGet(core.CurrentRequesterKeyString).(core.Requester))
 
-	getUserProgressResponse, err := handler.getUserProgressUsecase.ExecuteGetProgress(c, getUserProgressRequest.StartTime, getUserProgressRequest.EndTime)
+	getUserProgressResponse, err := handler.getUserProgressUsecase.ExecuteGetProgress(ctx)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		panic(err)
 	}
 
-	c.JSON(http.StatusOK, getUserProgressResponse)
+	res.ResponseSuccess(c, res.NewSuccessResponse(http.StatusOK, "success", getUserProgressResponse))
 }

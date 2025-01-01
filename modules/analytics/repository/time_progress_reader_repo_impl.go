@@ -17,8 +17,22 @@ func NewTimeProgressReaderRepository(db database.Database) TimeProgressReaderRep
 	}
 }
 
-func (repo timeProgressReaderRepoImpl) GetEachTaskProgress(userId int, startTime string, endTime string) (*[]entity.TaskProgressEntity, error) {
-	return nil, nil
+func (repo timeProgressReaderRepoImpl) GetEachTaskProgress(userId int) (*[]entity.TaskProgressEntity, error) {
+	var results *[]entity.TaskProgressEntity
+	query := `
+			SELECT task."taskId", "taskName", "status",
+			SUM("sessionEnd" - "sessionStart") as "totalTimeSpent", "estimatedTime"
+			FROM "Tasks" task JOIN "TimeProgressHistory" time ON task."taskId" = time."taskId"
+			WHERE task."userId" = ?
+			GROUP BY task."taskId", "taskName", "description", "estimatedTime"
+			ORDER BY task."taskId"
+		`
+
+	if err := repo.db.Executor.Raw(query, userId).Scan(&results).Error; err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }
 
 func (repo timeProgressReaderRepoImpl) GetTaskNumberByStatus(userId int, startTime string, endTime string) (*[]entity.TaskNumberByStatusEntity, error) {
