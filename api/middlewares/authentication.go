@@ -48,6 +48,9 @@ func Authentication() gin.HandlerFunc {
 			return
 		}
 
+		//Set claim
+		c.Set("claims", claims)
+
 		// Set requester information in context
 		c.Set(core.CurrentRequesterKeyString, core.RestRequester{
 			ID:   userId,
@@ -56,4 +59,46 @@ func Authentication() gin.HandlerFunc {
 		c.Next()
 
 	}
+}
+
+// UserVipMiddleware checks if the user has the user-vip role
+func UserVipMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		claims, exists := c.Get("claims")
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing token claims"})
+			c.Abort()
+			return
+		}
+
+		jwtClaims, ok := claims.(jwt.MapClaims)
+		if !ok || !isUserVip(jwtClaims) {
+			c.JSON(http.StatusForbidden, gin.H{"error": "User is not vip"})
+			c.Abort()
+			return
+		}
+
+		c.Next()
+	}
+}
+
+// isUserVip kiểm tra xem token có phải là vip không
+func isUserVip(claims jwt.MapClaims) bool {
+	realmAccess, exists := claims["realm_access"].(map[string]interface{})
+	if !exists {
+		return false
+	}
+
+	roles, exists := realmAccess["roles"].([]interface{})
+	if !exists {
+		return false
+	}
+
+	for _, role := range roles {
+		if role == "user-vip" {
+			return true
+		}
+	}
+
+	return false
 }

@@ -75,3 +75,12 @@ func ErrorNotAnyTaskToAnalyze(err error) *res.ErrorResponse {
 		"ERR_NOT_ANY_TASK_TO_ANALYZE",
 	)
 }
+
+func ErrorSystem(err error) *res.ErrorResponse {
+	return res.NewErrorResponse(
+		http.StatusInternalServerError,
+		nil,
+		"System error",
+		"ERR_SYSTEM",
+	)
+}
