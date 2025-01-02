@@ -8,7 +8,7 @@ type TaskResponse struct {
 	TaskName      string    `json:"taskName"`
 	Description   string    `json:"description"`
 	Priority      string    `json:"priority"`
-	EstimatedTime int       `json:"estimatedTime"`
+	EstimatedTime string    `json:"estimatedTime"`
 	Status        string    `json:"status"`
 	CreatedAt     time.Time `json:"createdAt"`
 	StartDate     time.Time `json:"startDate"`

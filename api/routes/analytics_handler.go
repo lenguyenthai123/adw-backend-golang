@@ -31,7 +31,7 @@ func (r *RouteHandler) analyticsRoute() route.GroupRoute {
 		Routes: []route.Route{
 			{
 				Path:    "/daily-spent-time",
-				Method:  method.GET,
+				Method:  method.POST,
 				Handler: r.AnalyticsHandler.HandleGetTimeSpentDaily,
 				Middlewares: route.Middlewares(
 					middlewares.Authentication(),

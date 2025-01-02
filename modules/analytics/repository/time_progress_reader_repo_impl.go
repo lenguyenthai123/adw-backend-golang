@@ -21,8 +21,8 @@ func (repo timeProgressReaderRepoImpl) GetEachTaskProgress(userId int) (*[]entit
 	var results *[]entity.TaskProgressEntity
 	query := `
 			SELECT task."taskId", "taskName", "status",
-			SUM("sessionEnd" - "sessionStart") as "totalTimeSpent", "estimatedTime"
-			FROM "Tasks" task JOIN "TimeProgressHistory" time ON task."taskId" = time."taskId"
+			EXTRACT(EPOCH FROM SUM("sessionEnd" - "sessionStart")) / 3600  as "totalTimeSpent", "estimatedTime"
+			FROM "Tasks" task LEFT JOIN "TimeProgressHistory" time ON task."taskId" = time."taskId"
 			WHERE task."userId" = ?
 			GROUP BY task."taskId", "taskName", "description", "estimatedTime"
 			ORDER BY task."taskId"
@@ -43,9 +43,11 @@ func (repo timeProgressReaderRepoImpl) GetTimeSpentDaily(userId int, startTime s
 	var results *[]entity.DailyProgressEntity
 	query := `
         SELECT day,
-            SUM(
+		ROUND(EXTRACT(EPOCH FROM SUM(
                 LEAST("sessionEnd", day::DATE + INTERVAL '1 day') - GREATEST("sessionStart", day::DATE)
-            ) AS "TotalTime"
+            ) / 3600), 1)
+			AS "TotalTime"
+			 
         FROM 
             generate_series(?::DATE, ?::DATE, '1 day') AS day LEFT JOIN "TimeProgressHistory"
         ON 

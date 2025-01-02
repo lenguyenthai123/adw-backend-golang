@@ -10,7 +10,7 @@ type Task struct {
 	TaskName      string    `gorm:"column:taskName"`
 	Description   string    `gorm:"column:description"`
 	Priority      string    `gorm:"column:priority;default:Medium"`
-	EstimatedTime int       `gorm:"column:estimatedTime"`
+	EstimatedTime string    `gorm:"column:estimatedTime"`
 	Status        string    `gorm:"column:status;default:Todo"`
 	CreatedAt     time.Time `gorm:"column:createdAt;autoCreateTime"`
 	StartDate     time.Time `gorm:"column:startDate"`
