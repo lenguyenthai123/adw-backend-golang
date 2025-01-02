@@ -62,7 +62,7 @@ func (uc getTaskListUsecaseImpl) ExecGetTaskList(ctx context.Context, searchFilt
 
 	//Update all task over due date
 	for _, task := range tasks {
-		if task.DueDate.After(time.Now()) {
+		if task.DueDate.Before(time.Now()) {
 			task.Status = "Expired"
 			// Update task status
 			err1 := uc.taskWriterRepository.UpdateTask(ctx, *task)
