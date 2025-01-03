@@ -1,23 +1,26 @@
 package handler
 
 import (
+	"backend-golang/core"
+	res "backend-golang/core/response"
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (handler *AnalyticsHandlerImpl) HandleGetAIFeedback(c *gin.Context) {
-	// var getUserProgressRequest req.GetAnalyticsRequest
-	// if err := c.ShouldBindJSON(&getUserProgressRequest); err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	// 	return
-	// }
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
-	// getUserProgressResponse, err := handler.getUserProgressUsecase.ExecGetUserProgress(c, getUserProgressRequest)
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	// 	return
-	// }
+	// Get user from context, require middleware
+	ctx := context.WithValue(c.Request.Context(), core.CurrentRequesterKeyStruct{},
+		c.MustGet(core.CurrentRequesterKeyString).(core.Requester))
 
-	c.JSON(http.StatusOK, "get ai feedback")
+	openaiResponse, err := handler.getAIFeedbackUsecase.ExecuteGetAIFeedback(ctx)
+
+	if err != nil {
+		panic(err)
+	}
+	// Return response
+	res.ResponseSuccess(c, res.NewSuccessResponse(http.StatusOK, "success", openaiResponse))
 }
