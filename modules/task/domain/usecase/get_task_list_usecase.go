@@ -60,15 +60,21 @@ func (uc getTaskListUsecaseImpl) ExecGetTaskList(ctx context.Context, searchFilt
 		return nil, constant.ErrorNotFoundTaskList(err)
 	}
 
-	//Update all task over due date
+	// Add all task over due date to a list
+	tasksOverDueDate := []int{}
+
+	// Update all task over due date
 	for _, task := range tasks {
-		if task.DueDate.Before(time.Now()) {
+		if task.DueDate.Before(time.Now()) && task.Status != "Completed" && task.Status != "Expired" {
 			task.Status = "Expired"
-			// Update task status
-			err1 := uc.taskWriterRepository.UpdateTask(ctx, *task)
-			if err1 != nil {
-				return nil, constant.ErrorSystem(err1)
-			}
+			tasksOverDueDate = append(tasksOverDueDate, task.TaskID)
+		}
+	}
+
+	if len(tasksOverDueDate) > 0 {
+		err1 := uc.taskWriterRepository.UpdateTaskListToExpired(ctx, tasksOverDueDate)
+		if err1 != nil {
+			return nil, constant.ErrorSystem(err1)
 		}
 	}
 

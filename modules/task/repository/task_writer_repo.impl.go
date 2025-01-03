@@ -88,3 +88,17 @@ func (repo taskWriterRepositoryImpl) DeleteTaskInRangeTime(ctx context.Context, 
 	}
 	return nil
 }
+
+func (repo taskWriterRepositoryImpl) UpdateTaskListToExpired(ctx context.Context, taskIdList []int) error {
+	// Perform the update operation
+	query := repo.db.Executor.WithContext(ctx).Model(&entity.Task{})
+	result := query.
+		Where("\"taskId\" IN (?)", taskIdList).
+		Updates(map[string]interface{}{"status": "Expired"})
+
+	// Check for errors
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
