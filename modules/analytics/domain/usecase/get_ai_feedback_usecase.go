@@ -65,10 +65,11 @@ func (uc getAIFeedbackUsecaseImpl) ExecuteGetAIFeedback(ctx context.Context) (*e
 	dailyProgressJSON, _ := json.Marshal(dailyProgress)
 
 	question := fmt.Sprintf(`
-        Based on the user's study data, provide feedback as follows:
+        Based on the user's study data, provide detailed feedback as follows (please do not break the format):
         1. Identify tasks or subjects where the user is excelling. 
         2. Highlight areas requiring more attention.
         3. Offer motivational feedback to encourage consistency and improvement.
+		Note: When indicate a task, please use task name instead of id, and give feedback for in task in "Description" field of those tasks.
         Data:
         - Task Progress: %s
         - Daily Progress: %s
