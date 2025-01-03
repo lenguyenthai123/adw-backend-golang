@@ -21,7 +21,7 @@ func NewAnalyticsHandler(db *database.Database, openaiClient *openai.Client, req
 		usecase.NewGetRatioTotalTimeSpentUsecase(timeProgressReaderRepo),
 		usecase.NewGetTimeSpentDailyUsecase(timeProgressReaderRepo),
 		usecase.NewGetTaskOfEachStatusUsecase(timeProgressReaderRepo),
-		usecase.NewGetAIFeedbackUsecase(timeProgressReaderRepo),
+		usecase.NewGetAIFeedbackUsecase(timeProgressReaderRepo, openaiClient),
 	)
 }
 
@@ -41,6 +41,14 @@ func (r *RouteHandler) analyticsRoute() route.GroupRoute {
 				Path:    "/user-progress",
 				Method:  method.GET,
 				Handler: r.AnalyticsHandler.HandleGetUserProgress,
+				Middlewares: route.Middlewares(
+					middlewares.Authentication(),
+				),
+			},
+			{
+				Path:    "/ai-feedback",
+				Method:  method.GET,
+				Handler: r.AnalyticsHandler.HandleGetAIFeedback,
 				Middlewares: route.Middlewares(
 					middlewares.Authentication(),
 				),
