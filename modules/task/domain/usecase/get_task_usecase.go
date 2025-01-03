@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"backend-golang/core"
+	"backend-golang/modules/task/api/mapper"
 	"backend-golang/modules/task/constant"
 	"backend-golang/modules/task/domain/entity"
 	"context"
@@ -40,9 +41,10 @@ func (uc getTaskUsecaseImpl) ExecGetTask(ctx context.Context, taskID string) (*e
 		return nil, constant.ErrorNotFoundTask(err)
 	}
 
+	defaultTime := mapper.ParseDate("")
 	// Check taskEntity dueTime over current time with timezone
 	fmt.Println(time.Now())
-	if taskEntity.DueDate.Before(time.Now()) && taskEntity.Status != "Completed" && taskEntity.Status != "Expired" {
+	if taskEntity.DueDate != defaultTime && taskEntity.DueDate.Before(time.Now()) && taskEntity.Status != "Completed" && taskEntity.Status != "Expired" {
 		taskEntity.Status = "Expired"
 		// Update task status
 		err1 := uc.taskWriterRepository.UpdateTask(ctx, *taskEntity)

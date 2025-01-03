@@ -118,6 +118,15 @@ func parseDueDate(dueDate string) time.Time {
 	return localTime
 }
 
+func ParseDate(dueDate string) time.Time {
+	parsedTime, _ := time.Parse(time.RFC3339, dueDate)
+	// Chuyển đổi sang múi giờ UTC+7 (Asia/Ho_Chi_Minh)
+	location, _ := time.LoadLocation("Asia/Ho_Chi_Minh")
+	localTime := parsedTime.In(location)
+
+	return localTime
+}
+
 // ConvertToUTC7 nhận vào một chuỗi thời gian và cố gắng chuyển sang UTC+7
 func ConvertToUTC7(input string) (string, error) {
 	// Danh sách các layout phổ biến

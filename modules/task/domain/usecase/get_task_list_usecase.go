@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"backend-golang/core"
+	"backend-golang/modules/task/api/mapper"
 	"backend-golang/modules/task/constant"
 	"backend-golang/modules/task/domain/entity"
 	"context"
@@ -63,9 +64,11 @@ func (uc getTaskListUsecaseImpl) ExecGetTaskList(ctx context.Context, searchFilt
 	// Add all task over due date to a list
 	tasksOverDueDate := []int{}
 
+	defaultTime := mapper.ParseDate("")
+
 	// Update all task over due date
 	for _, task := range tasks {
-		if task.DueDate.Before(time.Now()) && task.Status != "Completed" && task.Status != "Expired" {
+		if task.DueDate != defaultTime && task.DueDate.Before(time.Now()) && task.Status != "Completed" && task.Status != "Expired" {
 			task.Status = "Expired"
 			tasksOverDueDate = append(tasksOverDueDate, task.TaskID)
 		}
