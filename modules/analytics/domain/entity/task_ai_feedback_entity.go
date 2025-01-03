@@ -3,12 +3,12 @@ package entity
 import "time"
 
 type TaskOpenai struct {
-	TaskName    string    `json:"taskName"`
-	Description string    `json:"description"`
-	StartDate   time.Time `json:"startDate"`
-	DueDate     time.Time `json:"dueDate"`
-	Priority    string    `json:"priority"`
-	Status      string    `json:"status"`
+	TaskName  string    `json:"taskName"`
+	Feedback  string    `json:"feedback"`
+	StartDate time.Time `json:"startDate"`
+	DueDate   time.Time `json:"dueDate"`
+	Priority  string    `json:"priority"`
+	Status    string    `json:"status"`
 }
 
 type Feedback struct {
