@@ -42,7 +42,7 @@ func (uc getTaskUsecaseImpl) ExecGetTask(ctx context.Context, taskID string) (*e
 
 	// Check taskEntity dueTime over current time with timezone
 	fmt.Println(time.Now())
-	if taskEntity.DueDate.Before(time.Now()) {
+	if taskEntity.Status != "Expired" && taskEntity.DueDate.Before(time.Now()) {
 		taskEntity.Status = "Expired"
 		// Update task status
 		err1 := uc.taskWriterRepository.UpdateTask(ctx, *taskEntity)
