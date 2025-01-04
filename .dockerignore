@@ -1,0 +1,37 @@
+# Binaries (binary files được build từ Go)
+main
+*.exe
+*.out
+
+# Go build cache và các file tạm
+*.test
+*.o
+*.a
+*.tmp
+
+# Thư mục Go module cache (nếu sử dụng go mod vendor)
+vendor/
+
+# Thư mục hệ thống hoặc file tạm
+.DS_Store
+Thumbs.db
+
+# File log
+*.log
+
+# File và thư mục liên quan đến Git
+.git
+.gitignore
+
+# File và thư mục liên quan tới IDE/Editor
+.idea
+.vscode
+*.iml
+
+# Thư mục frontend (nếu có frontend trong dự án)
+node_modules/
+dist/
+
+# Các file nhạy cảm (nếu không cần thiết trong image)
+*.key
+*.pem
