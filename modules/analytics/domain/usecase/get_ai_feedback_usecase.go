@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"backend-golang/core"
+	"backend-golang/modules/analytics/constant"
 	"backend-golang/modules/task/domain/entity"
 	"backend-golang/utils"
 	"context"
@@ -46,6 +47,10 @@ func (uc getAIFeedbackUsecaseImpl) ExecuteGetAIFeedback(ctx context.Context) (*e
 	taskProgress, err := uc.timeProgressReaderRepo.GetEachTaskProgress(userIdInt)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch task progress: %v", err)
+	}
+
+	if taskProgress == nil || len(*taskProgress) == 0 {
+		return nil, constant.ErrorNotAnyProgressToAnalyze(err)
 	}
 
 	now := time.Now()
