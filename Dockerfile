@@ -31,8 +31,6 @@ RUN apk add --no-cache bash
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
 
-COPY .env .
-
 # Ensure the binary has execute permission
 RUN chmod +x ./main
 
