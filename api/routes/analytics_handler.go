@@ -35,6 +35,7 @@ func (r *RouteHandler) analyticsRoute() route.GroupRoute {
 				Handler: r.AnalyticsHandler.HandleGetTimeSpentDaily,
 				Middlewares: route.Middlewares(
 					middlewares.Authentication(),
+					middlewares.UserVipMiddleware(),
 				),
 			},
 			{
@@ -43,6 +44,7 @@ func (r *RouteHandler) analyticsRoute() route.GroupRoute {
 				Handler: r.AnalyticsHandler.HandleGetUserProgress,
 				Middlewares: route.Middlewares(
 					middlewares.Authentication(),
+					middlewares.UserVipMiddleware(),
 				),
 			},
 			{
@@ -51,6 +53,7 @@ func (r *RouteHandler) analyticsRoute() route.GroupRoute {
 				Handler: r.AnalyticsHandler.HandleGetAIFeedback,
 				Middlewares: route.Middlewares(
 					middlewares.Authentication(),
+					middlewares.UserVipMiddleware(),
 				),
 			},
 		},
