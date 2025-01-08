@@ -62,15 +62,15 @@ func (uc analyzeTaskUsecaseImpl) ExecAnalyzeTask(ctx context.Context, startTime,
 	tasksJSON, err := json.Marshal(taskOpenaiList)
 
 	question := fmt.Sprintf(`
-	Based on the user's study data, provide detailed feedback as follows (please do not break the format):
+	Analyze the following schedule and provide feedback:
+	Task: %s
+	Feedback should include:
 	1. Warnings about tight schedules.
 	2. Recommendations for prioritization to ensure balance and focus.
 	3. Reorganize the tasks by adjusting their startTime, dueDate, and priority to better align with the context.
 	4. If necessary, split tasks into smaller subtasks based on the context to ensure better distribution and alignment.
 	5. The startDate and dueDate must be generated based on the original startDate = %s and dueDate = %s provided for each task, ensuring they align appropriately with the context. AI should allocate hours and minutes (time of day) automatically to fit within the range 08:00 to 22:00 to suitable with context.
-    Data:
-        - Tasks: %s	
-    `, minStartDate, maxDueDate, tasksJSON)
+    `, tasksJSON, minStartDate, maxDueDate)
 
 	fmt.Printf(question)
 
