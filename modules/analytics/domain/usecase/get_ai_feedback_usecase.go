@@ -100,7 +100,7 @@ func (uc getAIFeedbackUsecaseImpl) ExecuteGetAIFeedback(ctx context.Context) (*e
 				JSONSchema: openai.F(schemaParam),
 			},
 		),
-		Model: openai.F(openai.ChatModelGPT4o2024_08_06),
+		Model: openai.F(openai.ChatModelGPT4o),
 	})
 
 	if err != nil {

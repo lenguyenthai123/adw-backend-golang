@@ -70,7 +70,8 @@ func (uc analyzeTaskUsecaseImpl) ExecAnalyzeTask(ctx context.Context, startTime,
 	3. Reorganize the tasks by adjusting their startTime, dueDate, and priority to better align with the context.
 	4. If necessary, split tasks into smaller subtasks based on the context to ensure better distribution and alignment.
 	5. The startDate and dueDate must be generated based on the original startDate = %s and dueDate = %s provided for each task, ensuring they align appropriately with the context. AI should allocate hours and minutes (time of day) automatically to fit within the range 08:00 to 22:00 to suitable with context.
-    `, tasksJSON, minStartDate, maxDueDate)
+	Special notes: In the 'feedback' attribute within the schema provided, include all content. Please write all content in Markdown format for better readability.    
+`, tasksJSON, minStartDate, maxDueDate)
 
 	fmt.Printf(question)
 
@@ -93,8 +94,11 @@ func (uc analyzeTaskUsecaseImpl) ExecAnalyzeTask(ctx context.Context, startTime,
 			},
 		),
 		// Only certain models can perform structured outputs
-		Model: openai.F(openai.ChatModelGPT4o2024_08_06),
+		Model: openai.F(openai.ChatModelGPT4o),
 	})
+	if err != nil {
+		log.JsonLogger.Error("ExecAnalyzeTask.openaiClient.Chat.Completions.New", err)
+	}
 
 	// The model responds with a JSON string, so parse it into a struct
 	taskResponseOpenai := entity.TaskOpenaiResponse{}
